@@ -1,0 +1,42 @@
+<% const solid = (typeof navSolid !== 'undefined' && navSolid) || path !== '/'; %>
+<nav class="navbar navbar-expand-lg navbar-hotel fixed-top <%= solid ? 'solid' : '' %>">
+  <div class="container">
+    <a class="navbar-brand" href="/">LUXURY<span class="text-gold">HOTEL</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link <%= path === '/' ? 'active' : '' %>" href="/">Trang chủ</a></li>
+        <li class="nav-item"><a class="nav-link <%= path.startsWith('/phong') ? 'active' : '' %>" href="/phong">Phòng &amp; Suite</a></li>
+        <li class="nav-item"><a class="nav-link <%= path === '/dich-vu' ? 'active' : '' %>" href="/dich-vu">Dịch vụ</a></li>
+        <li class="nav-item"><a class="nav-link <%= path === '/khuyen-mai' ? 'active' : '' %>" href="/khuyen-mai">Khuyến mãi</a></li>
+        <li class="nav-item"><a class="nav-link <%= path === '/gioi-thieu' ? 'active' : '' %>" href="/gioi-thieu">Giới thiệu</a></li>
+        <li class="nav-item"><a class="nav-link <%= path === '/lien-he' ? 'active' : '' %>" href="/lien-he">Liên hệ</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <% if (currentUser) { %>
+          <div class="dropdown">
+            <a class="btn btn-sm btn-outline-gold dropdown-toggle" data-bs-toggle="dropdown" href="#">
+              <i class="fa-solid fa-user me-1"></i><%= currentUser.full_name.split(' ').slice(-1)[0] %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <% if (currentUser.role === 'admin') { %>
+                <li><a class="dropdown-item" href="/admin"><i class="fa-solid fa-gauge me-2"></i>Trang quản trị</a></li>
+              <% } else if (currentUser.role === 'staff') { %>
+                <li><a class="dropdown-item" href="/staff"><i class="fa-solid fa-gauge me-2"></i>Trang lễ tân</a></li>
+              <% } %>
+              <li><a class="dropdown-item" href="/tai-khoan"><i class="fa-solid fa-id-card me-2"></i>Hồ sơ của tôi</a></li>
+              <li><a class="dropdown-item" href="/tai-khoan/don-dat"><i class="fa-solid fa-suitcase-rolling me-2"></i>Đơn đặt phòng</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="/logout"><i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất</a></li>
+            </ul>
+          </div>
+        <% } else { %>
+          <a href="/login" class="btn btn-sm btn-outline-gold">Đăng nhập</a>
+        <% } %>
+        <a href="/phong" class="btn btn-sm btn-gold">Đặt phòng</a>
+      </div>
+    </div>
+  </div>
+</nav>

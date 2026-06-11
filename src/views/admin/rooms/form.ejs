@@ -1,0 +1,43 @@
+<% const isEdit = room !== null; %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title"><%= isEdit ? 'Sửa phòng' : 'Thêm phòng' %></h1>
+  <a href="/admin/phong" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i>Quay lại</a>
+</div>
+
+<form method="post" action="<%= isEdit ? '/admin/phong/' + room.id + '?_method=PUT' : '/admin/phong' %>">
+  <div class="card">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Số phòng *</label>
+          <input type="text" name="room_number" class="form-control" required value="<%= isEdit ? room.room_number : (formData.room_number||'') %>">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Loại phòng *</label>
+          <select name="room_type_id" class="form-select" required>
+            <% roomTypes.forEach((t) => { %>
+              <option value="<%= t.id %>" <%= isEdit && room.room_type_id===t.id ? 'selected':'' %>><%= t.name %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Tầng</label>
+          <input type="number" name="floor" class="form-control" value="<%= isEdit ? room.floor||'' : '' %>">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Trạng thái</label>
+          <select name="status" class="form-select">
+            <% Object.keys(ROOM_STATUS.LABELS).forEach((s) => { %>
+              <option value="<%= s %>" <%= isEdit && room.status===s ? 'selected':'' %>><%= ROOM_STATUS.LABELS[s] %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Ghi chú</label>
+          <input type="text" name="note" class="form-control" value="<%= isEdit ? room.note||'' : '' %>">
+        </div>
+      </div>
+      <button class="btn btn-navy mt-4"><i class="fa-solid fa-floppy-disk me-2"></i>Lưu</button>
+    </div>
+  </div>
+</form>

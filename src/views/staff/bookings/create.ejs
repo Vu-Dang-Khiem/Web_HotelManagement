@@ -1,0 +1,109 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title">Đặt phòng tại quầy</h1>
+  <a href="/staff/dat-phong" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i>Quay lại</a>
+</div>
+
+<form method="post" action="/staff/dat-phong">
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card mb-3">
+        <div class="card-header">Thông tin khách &amp; phòng</div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Họ tên khách *</label><input type="text" name="guest_name" class="form-control" required value="<%= formData.guest_name||'' %>"></div>
+            <div class="col-md-6"><label class="form-label">Số điện thoại *</label><input type="text" name="guest_phone" class="form-control" required value="<%= formData.guest_phone||'' %>"></div>
+            <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="guest_email" class="form-control" value="<%= formData.guest_email||'' %>"></div>
+            <div class="col-md-6"><label class="form-label">Loại phòng *</label>
+              <select name="room_type_id" id="roomTypeSelect" class="form-select" required>
+                <% roomTypes.forEach((t) => { %><option value="<%= t.id %>" data-price="<%= t.base_price %>"><%= t.name %> — <%= formatCurrency(t.base_price) %>/đêm</option><% }) %>
+              </select>
+            </div>
+            <div class="col-md-3"><label class="form-label">Nhận phòng *</label><input type="date" name="check_in" class="form-control" required></div>
+            <div class="col-md-3"><label class="form-label">Trả phòng *</label><input type="date" name="check_out" class="form-control" required></div>
+            <div class="col-md-3"><label class="form-label">Người lớn *</label><input type="number" name="adults" class="form-control" min="1" value="2" required></div>
+            <div class="col-md-3"><label class="form-label">Trẻ em</label><input type="number" name="children" class="form-control" min="0" value="0"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Dịch vụ thêm</div>
+        <div class="card-body">
+          <div class="row g-2">
+            <% services.forEach((s) => { %>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center justify-content-between border rounded p-2">
+                  <div><i class="<%= s.icon %> text-gold me-2"></i><%= s.name %> <span class="small text-muted">(<%= formatCurrency(s.price) %>)</span></div>
+                  <input type="number" name="services_<%= s.id %>" value="0" min="0" class="form-control form-control-sm service-qty" data-price="<%= s.price %>" style="width:70px">
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Thanh toán</div>
+        <div class="card-body row g-3">
+          <div class="col-md-6"><label class="form-label">Mã khuyến mãi</label><input type="text" name="promo_code" class="form-control text-uppercase"></div>
+          <div class="col-md-6"><label class="form-label">Phương thức</label>
+            <select name="payment_method" class="form-select">
+              <% Object.keys(PAYMENT_STATUS.METHODS).forEach((m) => { %><option value="<%= m %>"><%= PAYMENT_STATUS.METHODS[m] %></option><% }) %>
+            </select>
+          </div>
+          <div class="col-12"><label class="form-label">Yêu cầu đặc biệt</label><textarea name="special_request" class="form-control" rows="2"></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card" id="booking-calc" data-price="<%= roomTypes[0] ? roomTypes[0].base_price : 0 %>" style="position:sticky;top:90px">
+        <div class="card-header">Tạm tính</div>
+        <div class="card-body">
+          <div class="summary-row"><span class="text-muted">Số đêm</span><span id="calc-nights">0 đêm</span></div>
+          <div class="summary-row"><span class="text-muted">Tiền phòng</span><span id="calc-room">0 ₫</span></div>
+          <div class="summary-row"><span class="text-muted">Dịch vụ</span><span id="calc-services">0 ₫</span></div>
+          <hr>
+          <div class="summary-row summary-total"><span>Tổng</span><span class="text-gold" id="calc-total">0 ₫</span></div>
+          <button class="btn btn-gold w-100 mt-3"><i class="fa-solid fa-check me-2"></i>Tạo đơn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  (function () {
+    const sel = document.getElementById('roomTypeSelect');
+    const box = document.getElementById('booking-calc');
+    const ci = document.querySelector('input[name="check_in"]');
+    const co = document.querySelector('input[name="check_out"]');
+    const fmt = (n) => n.toLocaleString('vi-VN') + ' ₫';
+    const setText = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+
+    function calc() {
+      const price = parseInt(box.dataset.price || '0', 10);
+      let nights = 0;
+      if (ci.value && co.value) nights = Math.max(0, Math.round((new Date(co.value) - new Date(ci.value)) / 86400000));
+      const roomTotal = price * nights;
+      let sv = 0;
+      document.querySelectorAll('.service-qty').forEach((el) => { sv += (parseInt(el.value||'0',10)) * (parseInt(el.dataset.price||'0',10)); });
+      setText('calc-nights', nights + ' đêm');
+      setText('calc-room', fmt(roomTotal));
+      setText('calc-services', fmt(sv));
+      setText('calc-total', fmt(roomTotal + sv));
+    }
+
+    // Ngày tối thiểu hôm nay
+    const today = new Date().toISOString().split('T')[0];
+    ci.min = today;
+    ci.addEventListener('change', () => {
+      if (ci.value) { const n = new Date(ci.value); n.setDate(n.getDate()+1); co.min = n.toISOString().split('T')[0]; if (co.value && co.value <= ci.value) co.value = co.min; }
+      calc();
+    });
+    co.addEventListener('change', calc);
+    sel.addEventListener('change', () => { box.dataset.price = sel.options[sel.selectedIndex].dataset.price; calc(); });
+    document.querySelectorAll('.service-qty').forEach((el) => el.addEventListener('input', calc));
+    calc();
+  })();
+</script>

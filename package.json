@@ -1,0 +1,40 @@
+{
+  "name": "hotel-management",
+  "version": "1.0.0",
+  "description": "Website quản lý khách sạn (ExpressJS MVC + EJS + MySQL)",
+  "main": "server.js",
+  "scripts": {
+    "free-port": "node scripts/free-port.js",
+    "prestart": "node scripts/free-port.js",
+    "start": "node server.js",
+    "predev": "node scripts/free-port.js",
+    "dev": "nodemon server.js",
+    "seed": "node database/seed.js"
+  },
+  "keywords": [
+    "hotel",
+    "express",
+    "mvc",
+    "ejs",
+    "mysql"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "dayjs": "^1.11.11",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.0",
+    "method-override": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.10.2",
+    "nodemailer": "^8.0.11"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

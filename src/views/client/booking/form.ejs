@@ -1,0 +1,127 @@
+<%- include('../../partials/page-header', {
+  headerBg: roomType.thumbnail,
+  breadcrumb: [{ label: 'Phòng', url: '/phong' }, { label: roomType.name, url: '/phong/' + roomType.slug }, { label: 'Đặt phòng' }]
+}) %>
+
+<section class="section">
+  <div class="container">
+    <form method="post" action="/dat-phong/<%= roomType.slug %>">
+      <div class="row g-5">
+        <div class="col-lg-8">
+          <!-- Thông tin khách -->
+          <div class="border rounded-10 p-4 mb-4">
+            <h4 class="mb-4"><i class="fa-solid fa-user text-gold me-2"></i>Thông tin khách hàng</h4>
+            <% if (currentUser) { %>
+              <p class="small text-muted mb-3"><i class="fa-solid fa-lock me-1"></i>Thông tin được lấy từ tài khoản của bạn. Muốn thay đổi, vui lòng cập nhật ở <a href="/tai-khoan">Hồ sơ</a>.</p>
+            <% } %>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Họ và tên *</label>
+                <input type="text" name="guest_name" class="form-control <%= currentUser ? 'bg-light' : '' %>" required
+                  value="<%= currentUser ? currentUser.full_name : (formData.guest_name || '') %>" <%= currentUser ? 'readonly' : '' %>>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Số điện thoại *</label>
+                <input type="text" name="guest_phone" class="form-control <%= (currentUser && currentUser.phone) ? 'bg-light' : '' %>" required
+                  value="<%= currentUser ? (currentUser.phone || '') : (formData.guest_phone || '') %>" <%= (currentUser && currentUser.phone) ? 'readonly' : '' %>>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" name="guest_email" class="form-control <%= currentUser ? 'bg-light' : '' %>"
+                  value="<%= currentUser ? currentUser.email : (formData.guest_email || '') %>" <%= currentUser ? 'readonly' : '' %>>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Người lớn *</label>
+                <input type="number" name="adults" class="form-control" min="1" value="<%= formData.adults || 2 %>" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Trẻ em</label>
+                <input type="number" name="children" class="form-control" min="0" value="<%= formData.children || 0 %>">
+              </div>
+            </div>
+          </div>
+
+          <!-- Thời gian -->
+          <div class="border rounded-10 p-4 mb-4">
+            <h4 class="mb-4"><i class="fa-solid fa-calendar-days text-gold me-2"></i>Thời gian lưu trú</h4>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Ngày nhận phòng *</label>
+                <input type="date" name="check_in" class="form-control" required value="<%= formData.check_in || '' %>">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Ngày trả phòng *</label>
+                <input type="date" name="check_out" class="form-control" required value="<%= formData.check_out || '' %>">
+              </div>
+            </div>
+          </div>
+
+          <!-- Dịch vụ thêm -->
+          <div class="border rounded-10 p-4 mb-4">
+            <h4 class="mb-4"><i class="fa-solid fa-concierge-bell text-gold me-2"></i>Dịch vụ thêm (tùy chọn)</h4>
+            <div class="row g-3">
+              <% services.forEach((s) => { %>
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center justify-content-between border rounded p-2">
+                    <div>
+                      <i class="<%= s.icon %> text-gold me-2"></i><strong><%= s.name %></strong>
+                      <div class="small text-muted"><%= formatCurrency(s.price) %>/<%= s.unit %></div>
+                    </div>
+                    <input type="number" name="services_<%= s.id %>" value="0" min="0" max="20"
+                      class="form-control form-control-sm service-qty" data-price="<%= s.price %>" style="width:70px">
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+
+          <!-- Ghi chú & thanh toán -->
+          <div class="border rounded-10 p-4">
+            <h4 class="mb-4"><i class="fa-solid fa-note-sticky text-gold me-2"></i>Yêu cầu &amp; thanh toán</h4>
+            <div class="mb-3">
+              <label class="form-label">Yêu cầu đặc biệt</label>
+              <textarea name="special_request" class="form-control" rows="2" placeholder="VD: phòng tầng cao, giường đôi..."><%= formData.special_request || '' %></textarea>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Mã khuyến mãi</label>
+                <input type="text" name="promo_code" class="form-control text-uppercase" placeholder="VD: SUMMER10" value="<%= formData.promo_code || '' %>">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phương thức thanh toán</label>
+                <select name="payment_method" class="form-select">
+                  <option value="cash">Thanh toán tại khách sạn</option>
+                  <option value="bidv">Chuyển khoản BIDV</option>
+                  <option value="card">Thẻ ngân hàng</option>
+                  <option value="momo">Ví MoMo</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tóm tắt -->
+        <div class="col-lg-4">
+          <div class="booking-summary p-4" id="booking-calc" data-price="<%= roomType.base_price %>">
+            <h4 class="mb-3">Tóm tắt đặt phòng</h4>
+            <div class="d-flex gap-3 mb-3">
+              <img src="<%= roomType.thumbnail %>" class="rounded" style="width:80px;height:60px;object-fit:cover" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200'">
+              <div>
+                <strong><%= roomType.name %></strong>
+                <div class="small text-muted"><%= formatCurrency(roomType.base_price) %>/đêm</div>
+              </div>
+            </div>
+            <hr>
+            <div class="summary-row"><span class="text-muted">Số đêm</span><span id="calc-nights">0 đêm</span></div>
+            <div class="summary-row"><span class="text-muted">Tiền phòng</span><span id="calc-room">0 ₫</span></div>
+            <div class="summary-row"><span class="text-muted">Dịch vụ</span><span id="calc-services">0 ₫</span></div>
+            <hr>
+            <div class="summary-row summary-total"><span>Tạm tính</span><span id="calc-total">0 ₫</span></div>
+            <p class="small text-muted mt-2">* Khuyến mãi (nếu có) sẽ được áp dụng sau khi xác nhận.</p>
+            <button type="submit" class="btn btn-gold w-100 btn-lg mt-2">Xác nhận đặt phòng</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

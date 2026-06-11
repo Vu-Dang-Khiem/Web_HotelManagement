@@ -1,0 +1,63 @@
+<%
+  const servicesSum = (invoice.services || []).reduce((s, it) => s + it.price * it.quantity, 0);
+  const roomTotal = Number(invoice.subtotal) - servicesSum;
+  const nights = invoice.nights || 1;
+%>
+<div class="invoice-box">
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <div class="footer-brand" style="color:#0f2238">LUXURY<span style="color:#c8a062">HOTEL</span></div>
+      <p class="text-muted mb-0 small">123 Đường Biển, TP. Vũng Tàu · 1900 1234</p>
+    </div>
+    <div class="text-end">
+      <h3 class="mb-0">HÓA ĐƠN</h3>
+      <p class="text-muted mb-0"><%= invoice.code %></p>
+      <p class="small text-muted mb-0"><%= formatDateTime(invoice.issued_at) %></p>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-6">
+      <h6 class="text-muted small text-uppercase">Khách hàng</h6>
+      <p class="mb-0"><strong><%= invoice.guest_name %></strong></p>
+      <p class="mb-0 small"><%= invoice.guest_phone %></p>
+    </div>
+    <div class="col-6 text-end">
+      <h6 class="text-muted small text-uppercase">Đơn đặt phòng</h6>
+      <p class="mb-0"><%= invoice.booking_code %></p>
+      <p class="mb-0 small"><%= invoice.type_name %> <% if (invoice.room_number) { %>· Phòng <%= invoice.room_number %><% } %></p>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead><tr><th>Hạng mục</th><th class="text-center">SL</th><th class="text-end">Đơn giá</th><th class="text-end">Thành tiền</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Tiền phòng (<%= formatDate(invoice.check_in) %> → <%= formatDate(invoice.check_out) %>)</td>
+        <td class="text-center"><%= nights %> đêm</td>
+        <td class="text-end"><%= formatCurrency(roomTotal / nights) %></td>
+        <td class="text-end"><%= formatCurrency(roomTotal) %></td>
+      </tr>
+      <% if (invoice.services && invoice.services.length) { %>
+        <% invoice.services.forEach((s) => { %>
+          <tr><td><%= s.name %></td><td class="text-center"><%= s.quantity %></td><td class="text-end"><%= formatCurrency(s.price) %></td><td class="text-end"><%= formatCurrency(s.price*s.quantity) %></td></tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+
+  <div class="row justify-content-end">
+    <div class="col-md-5">
+      <div class="d-flex justify-content-between py-1"><span class="text-muted">Tạm tính</span><span><%= formatCurrency(invoice.subtotal) %></span></div>
+      <% if (invoice.discount > 0) { %><div class="d-flex justify-content-between py-1 text-success"><span>Giảm giá</span><span>- <%= formatCurrency(invoice.discount) %></span></div><% } %>
+      <hr class="my-1">
+      <div class="d-flex justify-content-between py-1"><strong>TỔNG CỘNG</strong><strong style="color:#c8a062;font-size:1.2rem"><%= formatCurrency(invoice.total) %></strong></div>
+      <div class="d-flex justify-content-between py-1 small"><span class="text-muted">Thanh toán</span><span><%= PAYMENT_STATUS.METHODS[invoice.payment_method] || invoice.payment_method %> · <%= PAYMENT_STATUS.LABELS[invoice.payment_status] %></span></div>
+    </div>
+  </div>
+
+  <div class="text-center mt-5 pt-4 border-top">
+    <p class="mb-0 fst-italic text-muted">Cảm ơn quý khách đã sử dụng dịch vụ của LuxuryHotel!</p>
+    <% if (invoice.issuer_name) { %><p class="small text-muted">Nhân viên lập: <%= invoice.issuer_name %></p><% } %>
+  </div>
+</div>

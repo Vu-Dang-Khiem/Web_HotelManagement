@@ -1,0 +1,41 @@
+<h1 class="page-title mb-3">Hộp thư liên hệ</h1>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-5"><input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Tên, email, chủ đề..."></div>
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">Tất cả</option>
+        <option value="new" <%= query.status==='new'?'selected':'' %>>Chưa đọc</option>
+        <option value="replied" <%= query.status==='replied'?'selected':'' %>>Đã xử lý</option>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-navy w-100">Lọc</button></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Người gửi</th><th>Chủ đề</th><th>Ngày</th><th>TT</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% if (contacts.length === 0) { %><tr><td colspan="5"><div class="empty-state"><i class="fa-solid fa-inbox"></i><p>Hộp thư trống.</p></div></td></tr><% } %>
+        <% contacts.forEach((c) => { %>
+          <tr class="<%= c.status==='new' ? 'fw-semibold' : '' %>">
+            <td><%= c.name %><div class="small text-muted fw-normal"><%= c.email %></div></td>
+            <td><%= c.subject || '(Không có chủ đề)' %></td>
+            <td class="small text-muted"><%= formatDateTime(c.created_at) %></td>
+            <td><span class="badge bg-<%= c.status==='new'?'danger':'success' %>"><%= c.status==='new'?'Mới':'Đã xử lý' %></span></td>
+            <td class="text-end">
+              <a href="/admin/lien-he/<%= c.id %>" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-eye"></i></a>
+              <form method="post" action="/admin/lien-he/<%= c.id %>?_method=DELETE" class="d-inline" data-confirm="Xóa liên hệ này?">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

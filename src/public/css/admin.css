@@ -1,0 +1,128 @@
+/* ============================================================
+   BẢNG ĐIỀU KHIỂN - ADMIN & LỄ TÂN
+   ============================================================ */
+:root {
+  --side-w: 260px;
+  --navy: #0f2238;
+  --navy-2: #16314f;
+  --gold: #c8a062;
+  --bg: #f1f4f9;
+  --card: #fff;
+  --text: #2c3a4b;
+  --muted: #8a96a6;
+  --line: #e6eaf0;
+}
+
+/* Tiện ích màu navy (badge mã KM, nút...) — đồng bộ với trang khách (style.css) */
+.bg-navy { background: var(--navy) !important; color: #fff !important; }
+.text-navy { color: var(--navy) !important; }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-navy:hover { background: var(--navy-2); color: #fff; }
+
+/* Badge mềm (vd cột "Số phòng") — nền xám nhạt, chữ tối, không bị trắng trùng nền */
+.badge-soft { background: #eef1f6 !important; color: var(--text) !important; font-weight: 500; }
+
+/* Tiện ích màu gold (giá tiền, nút vàng) — đồng bộ với trang khách (style.css) */
+.text-gold { color: var(--gold) !important; }
+.btn-gold { background: var(--gold); border-color: var(--gold); color: #fff; }
+.btn-gold:hover { background: #b58e4f; border-color: #b58e4f; color: #fff; }
+.btn-outline-gold { border: 1.5px solid var(--gold); color: var(--gold); }
+.btn-outline-gold:hover { background: var(--gold); color: #fff; }
+
+body.dashboard {
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  background: var(--bg); color: var(--text); margin: 0;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top: 0; left: 0; width: var(--side-w); height: 100vh;
+  background: var(--navy); color: #fff; overflow-y: auto; z-index: 1040;
+  transition: transform .3s;
+}
+.sidebar .brand {
+  padding: 22px 24px; font-family: 'Playfair Display', serif; font-size: 1.4rem;
+  font-weight: 700; border-bottom: 1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:10px;
+}
+.sidebar .brand .text-gold { color: var(--gold); }
+.sidebar .menu { padding: 14px 0; }
+.sidebar .menu-label { padding: 16px 24px 6px; font-size: .72rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,.4); }
+.sidebar .menu a {
+  display: flex; align-items: center; gap: 12px; padding: 11px 24px;
+  color: rgba(255,255,255,.78); font-weight: 500; font-size: .94rem; border-left: 3px solid transparent;
+}
+.sidebar .menu a i { width: 20px; text-align: center; font-size: .95rem; }
+.sidebar .menu a:hover { background: rgba(255,255,255,.05); color: #fff; }
+.sidebar .menu a.active { background: rgba(200,160,98,.14); color: var(--gold); border-left-color: var(--gold); }
+.sidebar .menu a .badge { margin-left: auto; }
+
+/* Main */
+.main { margin-left: var(--side-w); min-height: 100vh; transition: margin .3s; }
+.topbar {
+  background: var(--card); padding: 14px 28px; display: flex; align-items: center;
+  justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,.04); position: sticky; top: 0; z-index: 1020;
+}
+.topbar h5 { margin: 0; font-family: 'Be Vietnam Pro'; font-weight: 600; }
+.content { padding: 28px; }
+
+.btn-hamburger { background: none; border: 0; font-size: 1.3rem; color: var(--navy); display: none; }
+
+/* Cards */
+.card { border: 0; border-radius: 12px; box-shadow: 0 4px 18px rgba(15,34,56,.06); }
+.card-header { background: #fff; border-bottom: 1px solid var(--line); font-weight: 600; padding: 16px 20px; }
+
+/* Stat cards */
+.stat-card { border-radius: 12px; padding: 22px; color: #fff; position: relative; overflow: hidden; }
+.stat-card .stat-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 3rem; opacity: .22; }
+.stat-card .stat-value { font-size: 1.9rem; font-weight: 700; }
+.stat-card .stat-label { opacity: .9; font-size: .9rem; }
+.bg-grad-1 { background: linear-gradient(135deg, #0f2238, #2a4a6f); }
+.bg-grad-2 { background: linear-gradient(135deg, #c8a062, #e0c187); }
+.bg-grad-3 { background: linear-gradient(135deg, #1f9d72, #46c79a); }
+.bg-grad-4 { background: linear-gradient(135deg, #c0506c, #e07a93); }
+.bg-grad-5 { background: linear-gradient(135deg, #5b6cc2, #8a97e0); }
+
+/* Tables */
+.table { vertical-align: middle; }
+.table thead th { background: #fafbfd; color: var(--muted); text-transform: uppercase; font-size: .76rem; letter-spacing: .5px; border-bottom: 1px solid var(--line); }
+.table td { border-color: var(--line); }
+.table-hover tbody tr:hover { background: #f8fafc; }
+
+/* Page title */
+.page-title { font-weight: 700; font-size: 1.5rem; color: var(--navy); margin: 0; }
+
+/* Filter bar */
+.filter-bar { background: #fff; border-radius: 12px; padding: 16px 18px; box-shadow: 0 4px 18px rgba(15,34,56,.06); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty-state i { font-size: 3rem; color: var(--line); margin-bottom: 16px; }
+
+/* Room board */
+.room-tile { border-radius: 10px; padding: 16px; color: #fff; text-align: center; transition: .2s; }
+.room-tile:hover { transform: translateY(-3px); }
+.room-tile .num { font-size: 1.3rem; font-weight: 700; }
+.room-tile .type { font-size: .78rem; opacity: .9; }
+.room-available { background: linear-gradient(135deg,#1f9d72,#46c79a); }
+.room-occupied { background: linear-gradient(135deg,#0f2238,#2a4a6f); }
+.room-maintenance { background: linear-gradient(135deg,#8a96a6,#aab4c2); }
+
+/* Invoice */
+.invoice-box { background: #fff; padding: 40px; border-radius: 12px; max-width: 800px; margin: auto; }
+.invoice-box table { width: 100%; }
+
+/* Login dashboard */
+.dash-login { min-height: 100vh; display: flex; align-items: center; background: linear-gradient(135deg,#0f2238,#1b3a5c); }
+
+/* avatar */
+.avatar-sm { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: var(--navy); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:600; }
+
+.backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 1035; }
+
+@media (max-width: 992px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.show { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .btn-hamburger { display: inline-block; }
+  .backdrop.show { display: block; }
+}

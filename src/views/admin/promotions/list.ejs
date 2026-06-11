@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h1 class="page-title">Khuyến mãi</h1>
+  <a href="/admin/khuyen-mai/them" class="btn btn-navy"><i class="fa-solid fa-plus me-2"></i>Thêm khuyến mãi</a>
+</div>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-6"><input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Mã hoặc tên..."></div>
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">Tất cả</option>
+        <option value="active" <%= query.status==='active'?'selected':'' %>>Hoạt động</option>
+        <option value="inactive" <%= query.status==='inactive'?'selected':'' %>>Ngừng</option>
+      </select>
+    </div>
+    <div class="col-md-3"><button class="btn btn-navy w-100">Lọc</button></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Mã</th><th>Tên</th><th>Giảm</th><th>Đơn tối thiểu</th><th>Hiệu lực</th><th>Trạng thái</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% if (promotions.length === 0) { %><tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-tags"></i><p>Chưa có khuyến mãi.</p></div></td></tr><% } %>
+        <% promotions.forEach((p) => { %>
+          <tr>
+            <td><span class="badge bg-navy fs-6"><%= p.code %></span></td>
+            <td><strong><%= p.name %></strong></td>
+            <td><% if (p.discount_type==='percent') { %><span class="text-danger fw-bold"><%= p.discount_value %>%</span><% } else { %><span class="text-danger fw-bold"><%= formatCurrency(p.discount_value) %></span><% } %></td>
+            <td><%= formatCurrency(p.min_total) %></td>
+            <td class="small text-muted"><%= p.start_date ? formatDate(p.start_date) : '' %> → <%= p.end_date ? formatDate(p.end_date) : '∞' %></td>
+            <td><span class="badge bg-<%= p.status==='active'?'success':'secondary' %>"><%= p.status==='active'?'Hoạt động':'Ngừng' %></span></td>
+            <td class="text-end">
+              <a href="/admin/khuyen-mai/<%= p.id %>/sua" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+              <form method="post" action="/admin/khuyen-mai/<%= p.id %>?_method=DELETE" class="d-inline" data-confirm="Xóa khuyến mãi này?">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

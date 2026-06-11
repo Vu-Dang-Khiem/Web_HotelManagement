@@ -1,0 +1,78 @@
+<%- include('../../partials/page-header', { breadcrumb: [{ label: 'Hồ sơ của tôi' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 mb-4">
+        <div class="text-center border rounded-10 p-4 mb-3">
+          <% if (user.avatar) { %>
+            <img src="<%= user.avatar %>" class="rounded-circle mb-3" style="width:90px;height:90px;object-fit:cover">
+          <% } else { %>
+            <div class="avatar-circle mx-auto mb-3" style="width:90px;height:90px;font-size:2rem"><%= user.full_name.charAt(0) %></div>
+          <% } %>
+          <h5 class="mb-0"><%= user.full_name %></h5>
+          <small class="text-muted"><%= user.email %></small>
+          <div class="mt-3"><span class="badge badge-soft"><%= bookingCount %> đơn đặt phòng</span></div>
+        </div>
+        <div class="list-group">
+          <a href="/tai-khoan" class="list-group-item list-group-item-action active"><i class="fa-solid fa-id-card me-2"></i>Hồ sơ</a>
+          <a href="/tai-khoan/don-dat" class="list-group-item list-group-item-action"><i class="fa-solid fa-suitcase-rolling me-2"></i>Đơn đặt phòng</a>
+          <a href="/logout" class="list-group-item list-group-item-action text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất</a>
+        </div>
+      </div>
+
+      <div class="col-lg-9">
+        <div class="border rounded-10 p-4 mb-4">
+          <h5 class="mb-4"><i class="fa-solid fa-user-pen text-gold me-2"></i>Thông tin cá nhân</h5>
+          <form method="post" action="/tai-khoan?_method=PUT" enctype="multipart/form-data">
+            <input type="hidden" name="current_avatar" value="<%= user.avatar || '' %>">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Họ và tên</label>
+                <input type="text" name="full_name" class="form-control" value="<%= user.full_name %>" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" value="<%= user.email %>" disabled>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Số điện thoại</label>
+                <input type="text" name="phone" class="form-control" value="<%= user.phone || '' %>">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Ảnh đại diện</label>
+                <input type="file" name="avatar" class="form-control" accept="image/*">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Địa chỉ</label>
+                <input type="text" name="address" class="form-control" value="<%= user.address || '' %>">
+              </div>
+            </div>
+            <button class="btn btn-gold mt-4">Lưu thay đổi</button>
+          </form>
+        </div>
+
+        <div class="border rounded-10 p-4">
+          <h5 class="mb-4"><i class="fa-solid fa-key text-gold me-2"></i>Đổi mật khẩu</h5>
+          <form method="post" action="/tai-khoan/doi-mat-khau?_method=PUT">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">Mật khẩu hiện tại</label>
+                <input type="password" name="current_password" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Mật khẩu mới</label>
+                <input type="password" name="new_password" class="form-control" required minlength="6">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Xác nhận mật khẩu</label>
+                <input type="password" name="confirm_password" class="form-control" required minlength="6">
+              </div>
+            </div>
+            <button class="btn btn-navy mt-4">Đổi mật khẩu</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

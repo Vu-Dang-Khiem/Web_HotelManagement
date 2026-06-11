@@ -1,0 +1,56 @@
+<%- include('../partials/page-header', { breadcrumb: [{ label: 'Liên hệ' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-5">
+        <p class="section-eyebrow">Kết nối với chúng tôi</p>
+        <h2 class="mb-3">Liên hệ &amp; Đặt phòng</h2>
+        <hr class="divider-gold start">
+        <p class="text-muted mt-4">Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7. Hãy để lại lời nhắn hoặc liên hệ trực tiếp.</p>
+        <div class="d-flex gap-3 mb-3 mt-4">
+          <div class="feature-box p-0"><div class="icon mb-0"><i class="fa-solid fa-location-dot"></i></div></div>
+          <div><strong>Địa chỉ</strong><p class="text-muted mb-0">123 Đường Biển, TP. Vũng Tàu</p></div>
+        </div>
+        <div class="d-flex gap-3 mb-3">
+          <div class="feature-box p-0"><div class="icon mb-0"><i class="fa-solid fa-phone"></i></div></div>
+          <div><strong>Hotline</strong><p class="text-muted mb-0">1900 1234</p></div>
+        </div>
+        <div class="d-flex gap-3">
+          <div class="feature-box p-0"><div class="icon mb-0"><i class="fa-solid fa-envelope"></i></div></div>
+          <div><strong>Email</strong><p class="text-muted mb-0">khiemxhbn@gmail.com</p></div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="border rounded-10 p-4 p-md-5">
+          <h4 class="mb-4">Gửi tin nhắn cho chúng tôi</h4>
+          <form method="post" action="/lien-he">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Họ tên *</label>
+                <input type="text" name="name" class="form-control" required value="<%= formData.name || (currentUser ? currentUser.full_name : '') %>">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" required value="<%= formData.email || (currentUser ? currentUser.email : '') %>">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Số điện thoại</label>
+                <input type="text" name="phone" class="form-control" value="<%= formData.phone || '' %>">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Chủ đề</label>
+                <input type="text" name="subject" class="form-control" value="<%= formData.subject || '' %>">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Nội dung *</label>
+                <textarea name="message" class="form-control" rows="4" required><%= formData.message || '' %></textarea>
+              </div>
+            </div>
+            <button class="btn btn-gold btn-lg mt-4">Gửi tin nhắn</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

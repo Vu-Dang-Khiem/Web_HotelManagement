@@ -1,0 +1,15 @@
+<% function act(prefix) { return path === prefix || (prefix !== '/staff' && path.startsWith(prefix)) ? 'active' : ''; } %>
+<aside class="sidebar">
+  <div class="brand">
+    <i class="fa-solid fa-bell-concierge text-gold"></i> Lễ tân
+  </div>
+  <nav class="menu">
+    <a href="/staff" class="<%= path === '/staff' ? 'active' : '' %>"><i class="fa-solid fa-gauge-high"></i> Tổng quan</a>
+
+    <div class="menu-label">Tác vụ hàng ngày</div>
+    <a href="/staff/dat-phong" class="<%= act('/staff/dat-phong') %>"><i class="fa-solid fa-calendar-check"></i> Đặt phòng</a>
+    <a href="/staff/dat-phong/them" class="<%= path === '/staff/dat-phong/them' ? 'active' : '' %>"><i class="fa-solid fa-plus"></i> Đặt tại quầy</a>
+    <a href="/staff/phong" class="<%= act('/staff/phong') %>"><i class="fa-solid fa-table-cells"></i> Sơ đồ phòng</a>
+    <a href="/staff/hoa-don" class="<%= act('/staff/hoa-don') %>"><i class="fa-solid fa-file-invoice-dollar"></i> Hóa đơn</a>
+  </nav>
+</aside>

@@ -1,0 +1,9 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title">Hóa đơn <%= invoice.code %></h1>
+  <div>
+    <a href="/staff/hoa-don" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i>Danh sách</a>
+    <a href="/staff/hoa-don/<%= invoice.id %>/in" target="_blank" class="btn btn-navy"><i class="fa-solid fa-print me-2"></i>In hóa đơn</a>
+  </div>
+</div>
+
+<%- include('../../partials/invoice-body') %>

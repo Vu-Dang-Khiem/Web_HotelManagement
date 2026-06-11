@@ -1,0 +1,50 @@
+<%- include('../partials/page-header', { breadcrumb: [{ label: 'Về chúng tôi' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-10" alt="">
+      </div>
+      <div class="col-lg-6">
+        <p class="section-eyebrow">Câu chuyện của chúng tôi</p>
+        <h2 class="mb-3">Hơn 15 năm mang đến trải nghiệm nghỉ dưỡng đẳng cấp</h2>
+        <hr class="divider-gold start">
+        <p class="text-muted mt-4">LuxuryHotel được thành lập với sứ mệnh mang đến cho du khách những kỳ nghỉ trọn vẹn nhất. Tọa lạc tại vị trí đắc địa bên bờ biển, khách sạn sở hữu hệ thống 120+ phòng nghỉ sang trọng, nhà hàng đạt chuẩn quốc tế cùng đội ngũ nhân viên tận tâm.</p>
+        <p class="text-muted">Chúng tôi cam kết không ngừng nâng cao chất lượng dịch vụ để mỗi khoảnh khắc của bạn tại đây đều trở nên đáng nhớ.</p>
+        <div class="row g-3 mt-3">
+          <div class="col-4 text-center"><div class="h2 text-gold mb-0">120+</div><small class="text-muted">Phòng nghỉ</small></div>
+          <div class="col-4 text-center"><div class="h2 text-gold mb-0">15K+</div><small class="text-muted">Khách hàng</small></div>
+          <div class="col-4 text-center"><div class="h2 text-gold mb-0">50+</div><small class="text-muted">Nhân viên</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-cream">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Giá trị cốt lõi</p>
+      <h2>Tại sao chọn chúng tôi?</h2>
+      <hr class="divider-gold">
+    </div>
+    <div class="row g-4">
+      <% const values = [
+        ['fa-solid fa-gem','Chất lượng 5 sao','Cơ sở vật chất hiện đại đạt tiêu chuẩn quốc tế.'],
+        ['fa-solid fa-heart','Dịch vụ tận tâm','Đội ngũ nhân viên chuyên nghiệp, phục vụ 24/7.'],
+        ['fa-solid fa-location-dot','Vị trí đắc địa','Trung tâm thành phố, sát bãi biển tuyệt đẹp.'],
+        ['fa-solid fa-tags','Giá tốt nhất','Cam kết giá cạnh tranh cùng nhiều ưu đãi.']
+      ]; %>
+      <% values.forEach((v) => { %>
+        <div class="col-md-3">
+          <div class="feature-box bg-white rounded-10 h-100">
+            <div class="icon"><i class="<%= v[0] %>"></i></div>
+            <h5><%= v[1] %></h5>
+            <p class="text-muted mb-0"><%= v[2] %></p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>

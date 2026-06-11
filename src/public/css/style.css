@@ -1,0 +1,218 @@
+/* ============================================================
+   LUXURY HOTEL - GIAO DIỆN KHÁCH HÀNG
+   Bảng màu: navy đậm + vàng gold, phong cách sang trọng
+   ============================================================ */
+:root {
+  --navy: #0f2238;
+  --navy-2: #16314f;
+  --gold: #c8a062;
+  --gold-light: #d8bd8a;
+  --cream: #f8f6f1;
+  --text: #243140;
+  --muted: #6b7785;
+  --line: #e7e1d6;
+  --shadow: 0 10px 30px rgba(15, 34, 56, .08);
+  --shadow-lg: 0 20px 50px rgba(15, 34, 56, .15);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  color: var(--text);
+  background: #fff;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, .font-display {
+  font-family: 'Playfair Display', 'Be Vietnam Pro', serif;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+a { text-decoration: none; transition: .2s; }
+.text-gold { color: var(--gold) !important; }
+.bg-navy { background: var(--navy) !important; }
+.bg-cream { background: var(--cream) !important; }
+.section { padding: 80px 0; }
+.section-sm { padding: 50px 0; }
+
+/* Tiêu đề mục */
+.section-title { position: relative; margin-bottom: 14px; }
+.section-eyebrow {
+  text-transform: uppercase; letter-spacing: 3px; font-size: .8rem;
+  color: var(--gold); font-weight: 600; margin-bottom: 8px;
+}
+.divider-gold {
+  width: 70px; height: 3px; background: var(--gold); border: 0; opacity: 1;
+  margin: 14px auto 0;
+}
+.divider-gold.start { margin-left: 0; }
+
+/* Buttons */
+.btn { border-radius: 4px; font-weight: 600; padding: .6rem 1.5rem; letter-spacing: .3px; }
+.btn-gold { background: var(--gold); border-color: var(--gold); color: #fff; }
+.btn-gold:hover { background: #b58e4f; border-color: #b58e4f; color: #fff; transform: translateY(-2px); }
+.btn-outline-gold { border: 1.5px solid var(--gold); color: var(--gold); }
+.btn-outline-gold:hover { background: var(--gold); color: #fff; }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-navy:hover { background: var(--navy-2); color: #fff; }
+
+/* ---------------- Navbar ---------------- */
+.navbar-hotel {
+  background: transparent; padding: 18px 0; transition: .3s; z-index: 1030;
+}
+.navbar-hotel.scrolled, .navbar-hotel.solid {
+  background: var(--navy); box-shadow: var(--shadow); padding: 12px 0;
+}
+.navbar-hotel .navbar-brand { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #fff; font-weight: 700; }
+.navbar-hotel .navbar-brand .text-gold { color: var(--gold) !important; }
+.navbar-hotel .nav-link { color: rgba(255,255,255,.85) !important; font-weight: 500; margin: 0 6px; }
+.navbar-hotel .nav-link:hover, .navbar-hotel .nav-link.active { color: var(--gold) !important; }
+.navbar-toggler { border-color: rgba(255,255,255,.4); }
+.navbar-toggler-icon { filter: invert(1); }
+
+/* ---------------- Hero ---------------- */
+.hero {
+  min-height: 100vh; position: relative; display: flex; align-items: center;
+  color: #fff; background-size: cover; background-position: center;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(15,34,56,.65), rgba(15,34,56,.45));
+}
+.hero-content { position: relative; z-index: 2; }
+.hero h1 { color: #fff; font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.1; }
+.hero .lead { font-size: 1.15rem; color: rgba(255,255,255,.9); }
+
+/* Search/Booking bar nổi */
+.booking-bar {
+  background: #fff; border-radius: 10px; box-shadow: var(--shadow-lg);
+  padding: 22px; margin-top: -55px; position: relative; z-index: 5;
+}
+.booking-bar label { font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
+.booking-bar .form-control, .booking-bar .form-select { border: 1px solid var(--line); }
+
+/* ---------------- Cards phòng ---------------- */
+.room-card {
+  border: 0; border-radius: 10px; overflow: hidden; background: #fff;
+  box-shadow: var(--shadow); transition: .35s; height: 100%;
+}
+.room-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.room-card .room-img { height: 240px; overflow: hidden; position: relative; }
+.room-card .room-img img { width: 100%; height: 100%; object-fit: cover; transition: .5s; }
+.room-card:hover .room-img img { transform: scale(1.08); }
+.room-card .price-tag {
+  position: absolute; bottom: 14px; left: 14px; background: var(--gold);
+  color: #fff; padding: 6px 14px; border-radius: 4px; font-weight: 600;
+}
+.room-card .card-body { padding: 22px; }
+.room-card h3 { font-size: 1.3rem; margin-bottom: 6px; }
+.room-meta { display: flex; gap: 16px; color: var(--muted); font-size: .88rem; margin: 12px 0; flex-wrap: wrap; }
+.room-meta span i { color: var(--gold); margin-right: 5px; }
+.amenity-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.amenity-pills .pill { background: var(--cream); color: var(--text); font-size: .78rem; padding: 4px 10px; border-radius: 20px; }
+
+/* Stars */
+.stars i { color: var(--gold); font-size: .85rem; }
+.stars .empty { color: #d8d2c5; }
+
+/* Feature / service */
+.feature-box { text-align: center; padding: 30px 18px; }
+.feature-box .icon {
+  width: 76px; height: 76px; border-radius: 50%; background: var(--cream);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; color: var(--gold); margin-bottom: 18px; transition: .3s;
+}
+.feature-box:hover .icon { background: var(--gold); color: #fff; transform: rotate(8deg); }
+.service-card { border: 1px solid var(--line); border-radius: 10px; padding: 26px; transition: .3s; height: 100%; }
+.service-card:hover { border-color: var(--gold); box-shadow: var(--shadow); }
+.service-card .icon { font-size: 2rem; color: var(--gold); margin-bottom: 14px; }
+
+/* Stat counters */
+.stat-strip { background: var(--navy); color: #fff; }
+.stat-item { text-align: center; padding: 20px; }
+.stat-item .num { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: var(--gold); font-weight: 700; }
+.stat-item .label { text-transform: uppercase; letter-spacing: 1px; font-size: .82rem; color: rgba(255,255,255,.75); }
+
+/* Testimonial */
+.testimonial-card { background: var(--cream); border-radius: 10px; padding: 28px; height: 100%; }
+.testimonial-card .quote { font-style: italic; color: var(--text); }
+.avatar-circle {
+  width: 50px; height: 50px; border-radius: 50%; background: var(--navy); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 600;
+}
+
+/* Promo */
+.promo-card {
+  border: 2px dashed var(--gold); border-radius: 10px; padding: 24px;
+  background: linear-gradient(135deg, #fff, var(--cream)); height: 100%;
+}
+.promo-code {
+  display: inline-block; background: var(--navy); color: var(--gold);
+  padding: 6px 16px; border-radius: 4px; font-weight: 700; letter-spacing: 2px;
+}
+
+/* Page header (sub pages) */
+.page-header {
+  background: var(--navy); color: #fff; padding: 150px 0 60px; position: relative;
+  background-size: cover; background-position: center;
+}
+.page-header::before { content: ''; position: absolute; inset: 0; background: rgba(15,34,56,.75); }
+.page-header .container { position: relative; z-index: 2; }
+.page-header h1 { color: #fff; }
+.breadcrumb-hotel { background: transparent; padding: 0; }
+.breadcrumb-hotel .breadcrumb-item, .breadcrumb-hotel a { color: rgba(255,255,255,.8); }
+.breadcrumb-hotel .active { color: var(--gold); }
+
+/* Footer */
+.footer { background: var(--navy); color: rgba(255,255,255,.75); padding: 70px 0 0; }
+.footer h5 { color: #fff; margin-bottom: 20px; font-family: 'Be Vietnam Pro'; font-size: 1.05rem; letter-spacing: .5px; }
+.footer a { color: rgba(255,255,255,.7); }
+.footer a:hover { color: var(--gold); }
+.footer .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: #fff; }
+.footer ul { list-style: none; padding: 0; }
+.footer ul li { margin-bottom: 10px; }
+.footer .social a {
+  width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.1);
+  display: inline-flex; align-items: center; justify-content: center; margin-right: 8px;
+}
+.footer .social a:hover { background: var(--gold); color: #fff; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,.1); margin-top: 50px; padding: 20px 0; font-size: .88rem; }
+
+/* Forms */
+.form-control:focus, .form-select:focus { border-color: var(--gold); box-shadow: 0 0 0 .2rem rgba(200,160,98,.18); }
+.auth-card { border: 0; border-radius: 12px; box-shadow: var(--shadow-lg); overflow: hidden; }
+
+/* Detail gallery */
+.gallery-main { border-radius: 10px; overflow: hidden; height: 420px; }
+.gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-thumb { border-radius: 8px; overflow: hidden; height: 90px; cursor: pointer; opacity: .7; transition: .2s; }
+.gallery-thumb:hover, .gallery-thumb.active { opacity: 1; outline: 2px solid var(--gold); }
+.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Booking summary sticky */
+.booking-summary { position: sticky; top: 100px; border: 1px solid var(--line); border-radius: 10px; }
+.summary-row { display: flex; justify-content: space-between; padding: 8px 0; }
+.summary-total { font-size: 1.3rem; font-weight: 700; color: var(--navy); }
+
+/* Badges */
+.badge-soft { background: var(--cream); color: var(--text); font-weight: 500; }
+
+/* timeline status */
+.status-steps { display: flex; gap: 8px; flex-wrap: wrap; }
+.status-steps .step { flex: 1; min-width: 90px; text-align: center; padding: 10px; border-radius: 8px; background: var(--cream); font-size: .82rem; }
+.status-steps .step.done { background: var(--navy); color: #fff; }
+
+/* Utilities */
+.object-cover { object-fit: cover; }
+.rounded-10 { border-radius: 10px; }
+.hover-lift { transition: .3s; }
+.hover-lift:hover { transform: translateY(-5px); }
+
+@media (max-width: 768px) {
+  .navbar-hotel { background: var(--navy); }
+  .section { padding: 50px 0; }
+  .hero { min-height: 90vh; }
+  .booking-summary { position: static; }
+}

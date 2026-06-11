@@ -1,0 +1,127 @@
+<%- include('../../partials/page-header', {
+  headerBg: room.thumbnail,
+  breadcrumb: [{ label: 'Phòng & Suite', url: '/phong' }, { label: room.name }]
+}) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <!-- Gallery -->
+        <div class="gallery-main mb-3">
+          <img src="<%= room.thumbnail %>" alt="<%= room.name %>" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800'">
+        </div>
+        <div class="row g-2">
+          <div class="col-3"><div class="gallery-thumb active"><img src="<%= room.thumbnail %>" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=300'"></div></div>
+          <% room.images.forEach((img) => { %>
+            <div class="col-3"><div class="gallery-thumb"><img src="<%= img.image_url %>" onerror="this.src='https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=300'"></div></div>
+          <% }) %>
+        </div>
+
+        <!-- Mô tả -->
+        <div class="mt-5">
+          <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+              <h2><%= room.name %></h2>
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <%- include('../../partials/stars', { rating: room.avg_rating || 0 }) %>
+                <span class="text-muted">(<%= room.review_count || 0 %> đánh giá)</span>
+              </div>
+            </div>
+            <div class="text-end">
+              <div class="h3 text-gold mb-0"><%= formatCurrency(room.base_price) %></div>
+              <small class="text-muted">/ đêm</small>
+            </div>
+          </div>
+          <div class="room-meta border-top border-bottom py-3 my-3">
+            <span><i class="fa-solid fa-user-group"></i><%= room.capacity %> khách</span>
+            <span><i class="fa-solid fa-vector-square"></i><%= room.area %> m²</span>
+            <span><i class="fa-solid fa-bed"></i><%= room.bed_type %></span>
+            <span><i class="fa-solid fa-mountain-sun"></i><%= room.view_type %></span>
+          </div>
+          <p class="text-muted"><%= room.description %></p>
+        </div>
+
+        <!-- Tiện nghi -->
+        <div class="mt-5">
+          <h4 class="mb-4">Tiện nghi phòng</h4>
+          <div class="row g-3">
+            <% room.amenities.forEach((a) => { %>
+              <div class="col-md-4 col-6">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="<%= a.icon %> text-gold fs-5"></i><span><%= a.name %></span>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Đánh giá -->
+        <div class="mt-5">
+          <h4 class="mb-4">Đánh giá từ khách hàng (<%= room.reviews.length %>)</h4>
+          <% if (room.reviews.length === 0) { %>
+            <p class="text-muted">Chưa có đánh giá nào cho phòng này.</p>
+          <% } %>
+          <% room.reviews.forEach((rv) => { %>
+            <div class="d-flex gap-3 mb-4 pb-4 border-bottom">
+              <span class="avatar-circle"><%= rv.full_name.charAt(0) %></span>
+              <div>
+                <div class="d-flex align-items-center gap-2">
+                  <strong><%= rv.full_name %></strong>
+                  <%- include('../../partials/stars', { rating: rv.rating }) %>
+                </div>
+                <small class="text-muted"><%= formatDate(rv.created_at) %></small>
+                <p class="mb-0 mt-1"><%= rv.comment %></p>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- Cột đặt phòng -->
+      <div class="col-lg-4">
+        <div class="booking-summary p-4">
+          <h4 class="mb-1">Đặt phòng này</h4>
+          <p class="text-muted small mb-4">Xác nhận nhanh chóng, miễn phí hủy trước 24h.</p>
+          <div class="d-flex justify-content-between mb-2"><span class="text-muted">Giá mỗi đêm</span><strong class="text-gold"><%= formatCurrency(room.base_price) %></strong></div>
+          <div class="d-flex justify-content-between mb-2"><span class="text-muted">Sức chứa</span><strong><%= room.capacity %> khách</strong></div>
+          <div class="d-flex justify-content-between mb-4"><span class="text-muted">Còn trống</span>
+            <strong class="<%= room.available_rooms > 0 ? 'text-success' : 'text-danger' %>">
+              <%= room.available_rooms > 0 ? room.available_rooms + ' phòng' : 'Hết phòng' %>
+            </strong>
+          </div>
+          <a href="/dat-phong/<%= room.slug %>" class="btn btn-gold w-100 btn-lg mb-2">Đặt ngay</a>
+          <a href="/lien-he" class="btn btn-outline-gold w-100">Liên hệ tư vấn</a>
+          <hr>
+          <div class="small text-muted">
+            <div class="mb-2"><i class="fa-solid fa-phone text-gold me-2"></i>Hotline: 1900 1234</div>
+            <div><i class="fa-solid fa-shield-halved text-gold me-2"></i>Thanh toán an toàn</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phòng tương tự -->
+    <% if (related.length) { %>
+    <div class="mt-5 pt-5 border-top">
+      <h3 class="mb-4">Phòng tương tự</h3>
+      <div class="row g-4">
+        <% related.forEach((room) => { %>
+          <div class="col-md-4">
+            <div class="room-card">
+              <div class="room-img">
+                <img src="<%= room.thumbnail %>" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600'">
+                <span class="price-tag"><%= formatCurrency(room.base_price) %>/đêm</span>
+              </div>
+              <div class="card-body">
+                <h3><a href="/phong/<%= room.slug %>" class="text-dark"><%= room.name %></a></h3>
+                <a href="/phong/<%= room.slug %>" class="btn btn-sm btn-outline-gold w-100 mt-2">Xem chi tiết</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>

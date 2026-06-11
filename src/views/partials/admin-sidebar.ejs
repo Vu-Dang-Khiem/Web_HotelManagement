@@ -1,0 +1,25 @@
+<% function act(prefix) { return path === prefix || (prefix !== '/admin' && path.startsWith(prefix)) ? 'active' : ''; } %>
+<aside class="sidebar">
+  <div class="brand">
+    <i class="fa-solid fa-hotel text-gold"></i> LUXURY<span class="text-gold">HOTEL</span>
+  </div>
+  <nav class="menu">
+    <a href="/admin" class="<%= path === '/admin' ? 'active' : '' %>"><i class="fa-solid fa-gauge-high"></i> Tổng quan</a>
+
+    <div class="menu-label">Quản lý phòng</div>
+    <a href="/admin/loai-phong" class="<%= act('/admin/loai-phong') %>"><i class="fa-solid fa-bed"></i> Loại phòng</a>
+    <a href="/admin/phong" class="<%= act('/admin/phong') %>"><i class="fa-solid fa-door-closed"></i> Phòng</a>
+    <a href="/admin/tien-nghi" class="<%= act('/admin/tien-nghi') %>"><i class="fa-solid fa-wifi"></i> Tiện nghi</a>
+    <a href="/admin/dich-vu" class="<%= act('/admin/dich-vu') %>"><i class="fa-solid fa-concierge-bell"></i> Dịch vụ</a>
+
+    <div class="menu-label">Kinh doanh</div>
+    <a href="/admin/dat-phong" class="<%= act('/admin/dat-phong') %>"><i class="fa-solid fa-calendar-check"></i> Đặt phòng</a>
+    <a href="/admin/khuyen-mai" class="<%= act('/admin/khuyen-mai') %>"><i class="fa-solid fa-tags"></i> Khuyến mãi</a>
+    <a href="/admin/thong-ke" class="<%= act('/admin/thong-ke') %>"><i class="fa-solid fa-chart-line"></i> Thống kê</a>
+
+    <div class="menu-label">Hệ thống</div>
+    <a href="/admin/nguoi-dung" class="<%= act('/admin/nguoi-dung') %>"><i class="fa-solid fa-users"></i> Người dùng</a>
+    <a href="/admin/danh-gia" class="<%= act('/admin/danh-gia') %>"><i class="fa-solid fa-star"></i> Đánh giá</a>
+    <a href="/admin/lien-he" class="<%= act('/admin/lien-he') %>"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+  </nav>
+</aside>

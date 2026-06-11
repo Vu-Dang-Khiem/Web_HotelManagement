@@ -1,0 +1,81 @@
+<%- include('../../partials/page-header', { breadcrumb: [{ label: 'Đơn đặt phòng', url: '/tai-khoan/don-dat' }, { label: booking.code }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="border rounded-10 p-4 mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h4 class="mb-0">Đơn <%= booking.code %></h4>
+            <span class="badge bg-<%= BOOKING_STATUS.BADGES[booking.status] %> fs-6"><%= BOOKING_STATUS.LABELS[booking.status] %></span>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-md-6">
+              <h6 class="text-muted text-uppercase small">Thông tin phòng</h6>
+              <p class="mb-1"><strong><%= booking.type_name %></strong> <% if (booking.room_number) { %>· Phòng <%= booking.room_number %><% } %></p>
+              <p class="mb-1"><i class="fa-solid fa-calendar me-2 text-gold"></i><%= formatDate(booking.check_in) %> → <%= formatDate(booking.check_out) %></p>
+              <p class="mb-0"><i class="fa-solid fa-moon me-2 text-gold"></i><%= booking.nights %> đêm · <%= booking.adults %> người lớn, <%= booking.children %> trẻ em</p>
+            </div>
+            <div class="col-md-6">
+              <h6 class="text-muted text-uppercase small">Người đặt</h6>
+              <p class="mb-1"><i class="fa-solid fa-user me-2 text-gold"></i><%= booking.guest_name %></p>
+              <p class="mb-1"><i class="fa-solid fa-phone me-2 text-gold"></i><%= booking.guest_phone %></p>
+              <% if (booking.special_request) { %><p class="mb-0"><i class="fa-solid fa-note-sticky me-2 text-gold"></i><%= booking.special_request %></p><% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review nếu đã trả phòng -->
+        <% if (booking.status === 'checked_out') { %>
+          <div class="border rounded-10 p-4">
+            <h5 class="mb-3"><i class="fa-solid fa-star text-gold me-2"></i>Đánh giá trải nghiệm của bạn</h5>
+            <form method="post" action="/tai-khoan/danh-gia">
+              <input type="hidden" name="booking_id" value="<%= booking.id %>">
+              <div class="mb-3">
+                <label class="form-label">Số sao</label>
+                <select name="rating" class="form-select" style="max-width:160px">
+                  <option value="5">★★★★★ Tuyệt vời</option>
+                  <option value="4">★★★★ Tốt</option>
+                  <option value="3">★★★ Bình thường</option>
+                  <option value="2">★★ Tạm</option>
+                  <option value="1">★ Tệ</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Nhận xét</label>
+                <textarea name="comment" class="form-control" rows="3" placeholder="Chia sẻ cảm nhận của bạn..."></textarea>
+              </div>
+              <button class="btn btn-gold">Gửi đánh giá</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="border rounded-10 p-4">
+          <h5 class="mb-3">Chi tiết thanh toán</h5>
+          <div class="summary-row"><span class="text-muted">Tiền phòng</span><span><%= formatCurrency(booking.room_total) %></span></div>
+          <% if (booking.services && booking.services.length) { %>
+            <% booking.services.forEach((s) => { %>
+              <div class="summary-row small"><span class="text-muted"><i class="<%= s.icon %> me-1"></i><%= s.name %> ×<%= s.quantity %></span><span><%= formatCurrency(s.price * s.quantity) %></span></div>
+            <% }) %>
+          <% } %>
+          <% if (booking.discount > 0) { %>
+            <div class="summary-row text-success"><span>Giảm giá <% if (booking.promo_code) { %>(<%= booking.promo_code %>)<% } %></span><span>- <%= formatCurrency(booking.discount) %></span></div>
+          <% } %>
+          <hr>
+          <div class="summary-row summary-total"><span>Tổng cộng</span><span class="text-gold"><%= formatCurrency(booking.total_amount) %></span></div>
+          <div class="mt-2 text-center">
+            <span class="badge bg-<%= PAYMENT_STATUS.BADGES[booking.payment_status] %>"><%= PAYMENT_STATUS.LABELS[booking.payment_status] %></span>
+          </div>
+          <% if (['pending','confirmed'].includes(booking.status)) { %>
+            <form method="post" action="/tai-khoan/don-dat/<%= booking.id %>/huy?_method=PUT" class="mt-3" onsubmit="return confirm('Hủy đơn này?')">
+              <button class="btn btn-outline-danger w-100">Hủy đơn</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

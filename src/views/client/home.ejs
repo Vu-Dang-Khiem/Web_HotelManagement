@@ -1,0 +1,204 @@
+<!-- HERO -->
+<section class="hero" style="background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80');">
+  <div class="container hero-content">
+    <div class="row">
+      <div class="col-lg-8">
+        <p class="section-eyebrow text-gold">Chào mừng đến với LuxuryHotel</p>
+        <h1 class="mb-4">Nghỉ dưỡng đẳng cấp<br>bên bờ biển xanh</h1>
+        <p class="lead mb-4">Trải nghiệm không gian sang trọng, dịch vụ 5 sao tận tâm và những khoảnh khắc khó quên cùng người thân yêu.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="/phong" class="btn btn-gold btn-lg">Khám phá phòng</a>
+          <a href="/gioi-thieu" class="btn btn-outline-light btn-lg">Tìm hiểu thêm</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THANH TÌM PHÒNG -->
+<div class="container">
+  <form action="/phong" method="get" class="booking-bar">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label>Nhận phòng</label>
+        <input type="date" name="check_in" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label>Trả phòng</label>
+        <input type="date" name="check_out" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label>Số khách</label>
+        <select name="capacity" class="form-select">
+          <option value="">Tất cả</option>
+          <option value="2">2 khách</option>
+          <option value="3">3 khách</option>
+          <option value="4">4 khách trở lên</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-navy w-100"><i class="fa-solid fa-magnifying-glass me-2"></i>Tìm phòng trống</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- GIỚI THIỆU -->
+<section class="section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="row g-3">
+          <div class="col-7"><img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded-10" alt=""></div>
+          <div class="col-5 align-self-end"><img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=400&q=80" class="img-fluid rounded-10" alt=""></div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <p class="section-eyebrow">Về chúng tôi</p>
+        <h2 class="mb-3">Điểm đến hoàn hảo cho<br>kỳ nghỉ trong mơ</h2>
+        <hr class="divider-gold start">
+        <p class="text-muted mt-4">LuxuryHotel mang đến không gian nghỉ dưỡng tinh tế với hệ thống phòng hiện đại, nhà hàng đạt chuẩn, hồ bơi vô cực và spa thư giãn. Đội ngũ nhân viên chuyên nghiệp luôn sẵn sàng phục vụ 24/7.</p>
+        <div class="row g-4 mt-2">
+          <div class="col-6"><i class="fa-solid fa-award text-gold fs-3"></i><h5 class="mt-2 mb-0">Dịch vụ 5 sao</h5><small class="text-muted">Đẳng cấp quốc tế</small></div>
+          <div class="col-6"><i class="fa-solid fa-location-dot text-gold fs-3"></i><h5 class="mt-2 mb-0">Vị trí đắc địa</h5><small class="text-muted">Trung tâm bên biển</small></div>
+        </div>
+        <a href="/gioi-thieu" class="btn btn-outline-gold mt-4">Xem thêm</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHÒNG NỔI BẬT -->
+<section class="section bg-cream">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Phòng &amp; Suite</p>
+      <h2>Các hạng phòng nổi bật</h2>
+      <hr class="divider-gold">
+    </div>
+    <div class="row g-4">
+      <% featuredRooms.forEach((room) => { %>
+        <div class="col-md-6 col-lg-3">
+          <div class="room-card">
+            <div class="room-img">
+              <img src="<%= room.thumbnail %>" alt="<%= room.name %>" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600'">
+              <span class="price-tag"><%= formatCurrency(room.base_price) %>/đêm</span>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <%- include('../partials/stars', { rating: room.avg_rating || 0 }) %>
+                <small class="text-muted"><%= room.review_count || 0 %> đánh giá</small>
+              </div>
+              <h3><a href="/phong/<%= room.slug %>" class="text-dark"><%= room.name %></a></h3>
+              <div class="room-meta">
+                <span><i class="fa-solid fa-user-group"></i><%= room.capacity %> khách</span>
+                <span><i class="fa-solid fa-vector-square"></i><%= room.area %> m²</span>
+                <span><i class="fa-solid fa-bed"></i><%= room.bed_type %></span>
+              </div>
+              <a href="/phong/<%= room.slug %>" class="btn btn-sm btn-gold w-100">Xem chi tiết</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <div class="text-center mt-5"><a href="/phong" class="btn btn-navy">Xem tất cả phòng</a></div>
+  </div>
+</section>
+
+<!-- DỊCH VỤ -->
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Tiện ích</p>
+      <h2>Dịch vụ cao cấp</h2>
+      <hr class="divider-gold">
+    </div>
+    <div class="row g-4">
+      <% services.forEach((s) => { %>
+        <div class="col-md-4">
+          <div class="feature-box">
+            <div class="icon"><i class="<%= s.icon %>"></i></div>
+            <h5><%= s.name %></h5>
+            <p class="text-muted mb-0"><%= s.description %></p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- THỐNG KÊ -->
+<section class="stat-strip">
+  <div class="container">
+    <div class="row">
+      <div class="col-6 col-md-3"><div class="stat-item"><div class="num">120+</div><div class="label">Phòng nghỉ</div></div></div>
+      <div class="col-6 col-md-3"><div class="stat-item"><div class="num">15K+</div><div class="label">Khách hài lòng</div></div></div>
+      <div class="col-6 col-md-3"><div class="stat-item"><div class="num"><%= ratingStats.avg || 5 %></div><div class="label">Điểm đánh giá</div></div></div>
+      <div class="col-6 col-md-3"><div class="stat-item"><div class="num">24/7</div><div class="label">Phục vụ</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- KHUYẾN MÃI -->
+<% if (promotions.length) { %>
+<section class="section bg-cream">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Ưu đãi</p>
+      <h2>Khuyến mãi hấp dẫn</h2>
+      <hr class="divider-gold">
+    </div>
+    <div class="row g-4">
+      <% promotions.forEach((p) => { %>
+        <div class="col-md-4">
+          <div class="promo-card text-center">
+            <i class="fa-solid fa-gift fs-1 text-gold mb-3"></i>
+            <h4><%= p.name %></h4>
+            <p class="text-muted"><%= p.description %></p>
+            <div class="promo-code"><%= p.code %></div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- ĐÁNH GIÁ -->
+<% if (reviews.length) { %>
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Cảm nhận</p>
+      <h2>Khách hàng nói gì về chúng tôi</h2>
+      <hr class="divider-gold">
+    </div>
+    <div class="row g-4">
+      <% reviews.slice(0,3).forEach((r) => { %>
+        <div class="col-md-4">
+          <div class="testimonial-card">
+            <%- include('../partials/stars', { rating: r.rating }) %>
+            <p class="quote mt-3">"<%= r.comment %>"</p>
+            <div class="d-flex align-items-center gap-3 mt-3">
+              <span class="avatar-circle"><%= r.full_name.charAt(0) %></span>
+              <div>
+                <strong><%= r.full_name %></strong>
+                <div class="small text-muted"><%= r.type_name %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- CTA -->
+<section class="section-sm bg-navy text-white text-center">
+  <div class="container py-4">
+    <h2 class="text-white mb-3">Sẵn sàng cho kỳ nghỉ tuyệt vời?</h2>
+    <p class="mb-4 text-white-50">Đặt phòng ngay hôm nay để nhận ưu đãi tốt nhất.</p>
+    <a href="/phong" class="btn btn-gold btn-lg">Đặt phòng ngay</a>
+  </div>
+</section>

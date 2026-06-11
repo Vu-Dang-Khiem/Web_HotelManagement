@@ -1,0 +1,30 @@
+<%- include('../partials/page-header', { breadcrumb: [{ label: 'Dịch vụ' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Trải nghiệm</p>
+      <h2>Dịch vụ &amp; Tiện ích cao cấp</h2>
+      <hr class="divider-gold">
+      <p class="text-muted mt-3 mx-auto" style="max-width:600px">Nâng tầm kỳ nghỉ của bạn với hệ thống dịch vụ đa dạng, đẳng cấp.</p>
+    </div>
+    <div class="row g-4">
+      <% services.forEach((s) => { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="service-card">
+            <div class="icon"><i class="<%= s.icon %>"></i></div>
+            <h5><%= s.name %></h5>
+            <p class="text-muted"><%= s.description %></p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-gold fw-bold"><%= formatCurrency(s.price) %></span>
+              <small class="text-muted">/ <%= s.unit %></small>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <div class="text-center mt-5">
+      <a href="/phong" class="btn btn-gold btn-lg">Đặt phòng &amp; thêm dịch vụ</a>
+    </div>
+  </div>
+</section>

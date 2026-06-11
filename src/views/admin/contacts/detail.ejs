@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title">Chi tiết liên hệ</h1>
+  <a href="/admin/lien-he" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i>Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h4 class="mb-1"><%= contact.subject || '(Không có chủ đề)' %></h4>
+            <p class="text-muted mb-0"><i class="fa-solid fa-user me-2"></i><%= contact.name %></p>
+          </div>
+          <span class="badge bg-success">Đã xử lý</span>
+        </div>
+        <hr>
+        <p><i class="fa-solid fa-envelope text-gold me-2"></i><a href="mailto:<%= contact.email %>"><%= contact.email %></a></p>
+        <% if (contact.phone) { %><p><i class="fa-solid fa-phone text-gold me-2"></i><%= contact.phone %></p><% } %>
+        <p><i class="fa-solid fa-clock text-gold me-2"></i><%= formatDateTime(contact.created_at) %></p>
+        <hr>
+        <h6 class="text-muted text-uppercase small">Nội dung</h6>
+        <p style="white-space:pre-line"><%= contact.message %></p>
+        <a href="mailto:<%= contact.email %>?subject=Re: <%= contact.subject %>" class="btn btn-gold mt-3"><i class="fa-solid fa-reply me-2"></i>Trả lời qua email</a>
+      </div>
+    </div>
+  </div>
+</div>

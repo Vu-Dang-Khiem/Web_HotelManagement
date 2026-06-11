@@ -1,0 +1,50 @@
+<h1 class="page-title mb-3">Đánh giá</h1>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">Tất cả trạng thái</option>
+        <option value="visible" <%= query.status==='visible'?'selected':'' %>>Hiển thị</option>
+        <option value="hidden" <%= query.status==='hidden'?'selected':'' %>>Đã ẩn</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="rating" class="form-select">
+        <option value="">Tất cả số sao</option>
+        <% [5,4,3,2,1].forEach((r) => { %><option value="<%= r %>" <%= String(query.rating)===String(r)?'selected':'' %>><%= r %> sao</option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-navy w-100">Lọc</button></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Khách</th><th>Loại phòng</th><th>Đánh giá</th><th>Nhận xét</th><th>Ngày</th><th>TT</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% if (reviews.length === 0) { %><tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-star"></i><p>Chưa có đánh giá.</p></div></td></tr><% } %>
+        <% reviews.forEach((rv) => { %>
+          <tr>
+            <td><strong><%= rv.full_name %></strong></td>
+            <td><%= rv.type_name %></td>
+            <td class="text-warning"><% for (let i=0;i<rv.rating;i++) { %>★<% } %></td>
+            <td class="small" style="max-width:280px"><%= rv.comment || '' %></td>
+            <td class="small text-muted"><%= formatDate(rv.created_at) %></td>
+            <td><span class="badge bg-<%= rv.status==='visible'?'success':'secondary' %>"><%= rv.status==='visible'?'Hiện':'Ẩn' %></span></td>
+            <td class="text-end">
+              <form method="post" action="/admin/danh-gia/<%= rv.id %>/toggle?_method=PUT" class="d-inline">
+                <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-<%= rv.status==='visible'?'eye-slash':'eye' %>"></i></button>
+              </form>
+              <form method="post" action="/admin/danh-gia/<%= rv.id %>?_method=DELETE" class="d-inline" data-confirm="Xóa đánh giá này?">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

@@ -1,0 +1,22 @@
+<%
+  const bg = typeof headerBg !== 'undefined' ? headerBg
+    : 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1920&q=80';
+  const crumbs = typeof breadcrumb !== 'undefined' ? breadcrumb : [];
+%>
+<section class="page-header" style="background-image:url('<%= bg %>');">
+  <div class="container">
+    <h1 class="mb-2"><%= typeof headerTitle !== 'undefined' ? headerTitle : title %></h1>
+    <nav>
+      <ol class="breadcrumb breadcrumb-hotel mb-0">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <% crumbs.forEach((c, i) => { %>
+          <% if (c.url && i < crumbs.length - 1) { %>
+            <li class="breadcrumb-item"><a href="<%= c.url %>"><%= c.label %></a></li>
+          <% } else { %>
+            <li class="breadcrumb-item active"><%= c.label %></li>
+          <% } %>
+        <% }) %>
+      </ol>
+    </nav>
+  </div>
+</section>

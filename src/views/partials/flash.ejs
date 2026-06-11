@@ -1,0 +1,23 @@
+<% const hasFlash = (success && success.length) || (error && error.length) || (info && info.length); %>
+<% if (hasFlash) { %>
+<div class="flash-container position-fixed top-0 end-0 p-3" style="z-index: 1100; margin-top: 80px; max-width: 380px;">
+  <% success.forEach((msg) => { %>
+    <div class="alert alert-success alert-dismissible fade show alert-auto shadow-sm" role="alert">
+      <i class="fa-solid fa-circle-check me-2"></i><%= msg %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% }) %>
+  <% error.forEach((msg) => { %>
+    <div class="alert alert-danger alert-dismissible fade show alert-auto shadow-sm" role="alert">
+      <i class="fa-solid fa-circle-exclamation me-2"></i><%= msg %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% }) %>
+  <% info.forEach((msg) => { %>
+    <div class="alert alert-info alert-dismissible fade show alert-auto shadow-sm" role="alert">
+      <i class="fa-solid fa-circle-info me-2"></i><%= msg %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% }) %>
+</div>
+<% } %>

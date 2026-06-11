@@ -1,0 +1,42 @@
+<section class="bg-cream" style="padding:140px 0 80px; min-height:100vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-6">
+        <div class="card auth-card">
+          <div class="bg-navy text-white text-center py-4">
+            <div class="footer-brand">LUXURY<span class="text-gold">HOTEL</span></div>
+            <p class="mb-0 text-white-50">Tạo tài khoản mới</p>
+          </div>
+          <div class="card-body p-4 p-md-5">
+            <form method="post" action="/register">
+              <div class="mb-3">
+                <label class="form-label">Họ và tên *</label>
+                <input type="text" name="full_name" class="form-control" required value="<%= formData.full_name || '' %>">
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Email *</label>
+                  <input type="email" name="email" class="form-control" required value="<%= formData.email || '' %>">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Số điện thoại</label>
+                  <input type="text" name="phone" class="form-control" value="<%= formData.phone || '' %>">
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Địa chỉ</label>
+                <input type="text" name="address" class="form-control" value="<%= formData.address || '' %>">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Mật khẩu * <small class="text-muted">(tối thiểu 6 ký tự)</small></label>
+                <input type="password" name="password" class="form-control" required minlength="6">
+              </div>
+              <button class="btn btn-gold w-100 btn-lg mb-3">Đăng ký</button>
+              <p class="text-center mb-0 text-muted">Đã có tài khoản? <a href="/login" class="text-gold fw-semibold">Đăng nhập</a></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

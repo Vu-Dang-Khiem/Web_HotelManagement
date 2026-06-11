@@ -1,0 +1,105 @@
+<%- include('../../partials/page-header', { breadcrumb: [{ label: 'Phòng & Suite' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Bộ lọc -->
+      <div class="col-lg-3">
+        <form method="get" action="/phong" class="border rounded-10 p-4 booking-summary">
+          <h5 class="mb-3"><i class="fa-solid fa-filter text-gold me-2"></i>Bộ lọc</h5>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Tìm kiếm</label>
+            <input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Tên phòng...">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Giá tối thiểu</label>
+            <input type="number" name="minPrice" value="<%= query.minPrice || '' %>" class="form-control" placeholder="0" step="100000">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Giá tối đa</label>
+            <input type="number" name="maxPrice" value="<%= query.maxPrice || '' %>" class="form-control" placeholder="10.000.000" step="100000">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Số khách</label>
+            <select name="capacity" class="form-select">
+              <option value="">Tất cả</option>
+              <% [1,2,3,4].forEach((c) => { %>
+                <option value="<%= c %>" <%= String(query.capacity) === String(c) ? 'selected' : '' %>><%= c %>+ khách</option>
+              <% }) %>
+            </select>
+          </div>
+          <input type="hidden" name="sort" value="<%= query.sort || '' %>">
+          <button class="btn btn-gold w-100">Áp dụng</button>
+          <a href="/phong" class="btn btn-link w-100 text-muted">Xóa lọc</a>
+        </form>
+      </div>
+
+      <!-- Danh sách -->
+      <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <p class="text-muted mb-0">Tìm thấy <strong><%= pagination.totalItems %></strong> hạng phòng</p>
+          <form method="get" action="/phong" class="d-flex align-items-center gap-2">
+            <% Object.keys(query).forEach((k) => { if (k !== 'sort' && k !== 'page') { %>
+              <input type="hidden" name="<%= k %>" value="<%= query[k] %>">
+            <% }}) %>
+            <label class="small text-muted mb-0">Sắp xếp:</label>
+            <select name="sort" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
+              <option value="newest" <%= query.sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
+              <option value="price_asc" <%= query.sort === 'price_asc' ? 'selected' : '' %>>Giá thấp → cao</option>
+              <option value="price_desc" <%= query.sort === 'price_desc' ? 'selected' : '' %>>Giá cao → thấp</option>
+              <option value="rating" <%= query.sort === 'rating' ? 'selected' : '' %>>Đánh giá cao</option>
+            </select>
+          </form>
+        </div>
+
+        <% if (rooms.length === 0) { %>
+          <div class="text-center py-5">
+            <i class="fa-solid fa-bed fs-1 text-muted mb-3"></i>
+            <p class="text-muted">Không tìm thấy phòng phù hợp.</p>
+          </div>
+        <% } %>
+
+        <div class="row g-4">
+          <% rooms.forEach((room) => { %>
+            <div class="col-md-6">
+              <div class="room-card">
+                <div class="room-img">
+                  <img src="<%= room.thumbnail %>" alt="<%= room.name %>" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600'">
+                  <span class="price-tag"><%= formatCurrency(room.base_price) %>/đêm</span>
+                  <% if (room.available_rooms > 0) { %>
+                    <span class="badge bg-success position-absolute top-0 end-0 m-2">Còn <%= room.available_rooms %> phòng</span>
+                  <% } else { %>
+                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">Hết phòng</span>
+                  <% } %>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <%- include('../../partials/stars', { rating: room.avg_rating || 0 }) %>
+                    <small class="text-muted"><%= room.review_count || 0 %> đánh giá</small>
+                  </div>
+                  <h3><a href="/phong/<%= room.slug %>" class="text-dark"><%= room.name %></a></h3>
+                  <div class="room-meta">
+                    <span><i class="fa-solid fa-user-group"></i><%= room.capacity %> khách</span>
+                    <span><i class="fa-solid fa-vector-square"></i><%= room.area %> m²</span>
+                    <span><i class="fa-solid fa-bed"></i><%= room.bed_type %></span>
+                  </div>
+                  <div class="amenity-pills">
+                    <% (room.amenities || []).forEach((a) => { %>
+                      <span class="pill"><i class="<%= a.icon %> me-1 text-gold"></i><%= a.name %></span>
+                    <% }) %>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <a href="/phong/<%= room.slug %>" class="btn btn-sm btn-outline-gold flex-fill">Chi tiết</a>
+                    <a href="/dat-phong/<%= room.slug %>" class="btn btn-sm btn-gold flex-fill">Đặt ngay</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+
+        <%- include('../../partials/pagination') %>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,137 @@
+<%
+  // Cần: basePath ('/admin'|'/staff'), booking, availableRooms
+  // Tùy chọn: showPayment (bool), showInvoice (bool)
+  const bp = basePath;
+  const statusOrder = ['pending','confirmed','checked_in','checked_out'];
+  const curIdx = statusOrder.indexOf(booking.status);
+%>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div>
+    <a href="<%= bp %>/dat-phong" class="btn btn-sm btn-outline-secondary mb-2"><i class="fa-solid fa-arrow-left me-1"></i>Danh sách</a>
+    <h1 class="page-title">Đơn <%= booking.code %></h1>
+  </div>
+  <div class="text-end">
+    <span class="badge bg-<%= BOOKING_STATUS.BADGES[booking.status] %> fs-6"><%= BOOKING_STATUS.LABELS[booking.status] %></span>
+    <span class="badge bg-<%= PAYMENT_STATUS.BADGES[booking.payment_status] %> fs-6"><%= PAYMENT_STATUS.LABELS[booking.payment_status] %></span>
+  </div>
+</div>
+
+<!-- Tiến trình -->
+<% if (booking.status !== 'cancelled') { %>
+<div class="card mb-3"><div class="card-body">
+  <div class="status-steps">
+    <% statusOrder.forEach((st, i) => { %>
+      <div class="step <%= i <= curIdx ? 'done' : '' %>">
+        <i class="fa-solid <%= i < curIdx ? 'fa-circle-check' : (i===curIdx ? 'fa-circle-dot' : 'fa-circle') %> d-block mb-1"></i>
+        <%= BOOKING_STATUS.LABELS[st] %>
+      </div>
+    <% }) %>
+  </div>
+</div></div>
+<% } %>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card mb-3">
+      <div class="card-header">Thông tin đặt phòng</div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h6 class="text-muted small text-uppercase">Khách hàng</h6>
+            <p class="mb-1"><i class="fa-solid fa-user me-2 text-gold"></i><strong><%= booking.guest_name %></strong></p>
+            <p class="mb-1"><i class="fa-solid fa-phone me-2 text-gold"></i><%= booking.guest_phone %></p>
+            <% if (booking.guest_email) { %><p class="mb-0"><i class="fa-solid fa-envelope me-2 text-gold"></i><%= booking.guest_email %></p><% } %>
+          </div>
+          <div class="col-md-6">
+            <h6 class="text-muted small text-uppercase">Lưu trú</h6>
+            <p class="mb-1"><i class="fa-solid fa-bed me-2 text-gold"></i><strong><%= booking.type_name %></strong> <% if (booking.room_number) { %>· Phòng <%= booking.room_number %><% } %></p>
+            <p class="mb-1"><i class="fa-solid fa-calendar me-2 text-gold"></i><%= formatDate(booking.check_in) %> → <%= formatDate(booking.check_out) %> (<%= booking.nights %> đêm)</p>
+            <p class="mb-0"><i class="fa-solid fa-user-group me-2 text-gold"></i><%= booking.adults %> người lớn, <%= booking.children %> trẻ em</p>
+          </div>
+          <% if (booking.special_request) { %>
+            <div class="col-12"><h6 class="text-muted small text-uppercase">Yêu cầu đặc biệt</h6><p class="mb-0"><%= booking.special_request %></p></div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gán phòng -->
+    <% if (['pending','confirmed'].includes(booking.status)) { %>
+    <div class="card mb-3">
+      <div class="card-header">Gán phòng cụ thể</div>
+      <div class="card-body">
+        <form method="post" action="<%= bp %>/dat-phong/<%= booking.id %>/gan-phong?_method=PUT" class="row g-2">
+          <div class="col-md-8">
+            <select name="room_id" class="form-select" required>
+              <option value="">-- Chọn phòng trống --</option>
+              <% availableRooms.forEach((r) => { %>
+                <option value="<%= r.id %>" <%= booking.room_id===r.id?'selected':'' %>>Phòng <%= r.room_number %> (Tầng <%= r.floor %>)</option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-md-4"><button class="btn btn-navy w-100">Gán phòng</button></div>
+        </form>
+        <% if (availableRooms.length === 0) { %><small class="text-danger">Không còn phòng trống loại này trong khoảng ngày đã chọn.</small><% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <div class="col-lg-4">
+    <!-- Hóa đơn / thanh toán -->
+    <div class="card mb-3">
+      <div class="card-header">Chi tiết tiền</div>
+      <div class="card-body">
+        <div class="summary-row"><span class="text-muted">Tiền phòng</span><span><%= formatCurrency(booking.room_total) %></span></div>
+        <% if (booking.services && booking.services.length) { %>
+          <% booking.services.forEach((s) => { %>
+            <div class="summary-row small"><span class="text-muted"><%= s.name %> ×<%= s.quantity %></span><span><%= formatCurrency(s.price*s.quantity) %></span></div>
+          <% }) %>
+        <% } %>
+        <% if (booking.discount > 0) { %><div class="summary-row text-success"><span>Giảm giá</span><span>- <%= formatCurrency(booking.discount) %></span></div><% } %>
+        <hr>
+        <div class="summary-row summary-total"><span>Tổng</span><span class="text-gold"><%= formatCurrency(booking.total_amount) %></span></div>
+      </div>
+    </div>
+
+    <!-- Hành động -->
+    <div class="card">
+      <div class="card-header">Thao tác</div>
+      <div class="card-body d-grid gap-2">
+        <% if (booking.status === 'pending') { %>
+          <form method="post" action="<%= bp %>/dat-phong/<%= booking.id %>/trang-thai?_method=PUT"><input type="hidden" name="action" value="confirm"><button class="btn btn-info w-100"><i class="fa-solid fa-check me-1"></i>Xác nhận đơn</button></form>
+        <% } %>
+        <% if (booking.status === 'confirmed') { %>
+          <form method="post" action="<%= bp %>/dat-phong/<%= booking.id %>/trang-thai?_method=PUT" onsubmit="return <%= booking.room_id ? 'true' : 'confirm(\'Chưa gán phòng. Vẫn nhận phòng?\')' %>"><input type="hidden" name="action" value="checkin"><button class="btn btn-primary w-100"><i class="fa-solid fa-right-to-bracket me-1"></i>Nhận phòng (Check-in)</button></form>
+        <% } %>
+        <% if (booking.status === 'checked_in') { %>
+          <form method="post" action="<%= bp %>/dat-phong/<%= booking.id %>/trang-thai?_method=PUT"><input type="hidden" name="action" value="checkout"><button class="btn btn-success w-100"><i class="fa-solid fa-right-from-bracket me-1"></i>Trả phòng (Check-out)</button></form>
+        <% } %>
+        <% if (['pending','confirmed'].includes(booking.status)) { %>
+          <form method="post" action="<%= bp %>/dat-phong/<%= booking.id %>/trang-thai?_method=PUT" data-confirm="Hủy đơn này?"><input type="hidden" name="action" value="cancel"><button class="btn btn-outline-danger w-100"><i class="fa-solid fa-ban me-1"></i>Hủy đơn</button></form>
+        <% } %>
+
+        <% if (typeof showInvoice !== 'undefined' && showInvoice && booking.payment_status !== 'paid') { %>
+          <hr class="my-2">
+          <form method="post" action="/staff/hoa-don/tu-dat-phong/<%= booking.id %>">
+            <select name="payment_method" class="form-select form-select-sm mb-2">
+              <% Object.keys(PAYMENT_STATUS.METHODS).forEach((m) => { %><option value="<%= m %>"><%= PAYMENT_STATUS.METHODS[m] %></option><% }) %>
+            </select>
+            <label class="small d-block mb-2"><input type="checkbox" name="checkout" checked> Đồng thời trả phòng</label>
+            <button class="btn btn-gold w-100"><i class="fa-solid fa-file-invoice-dollar me-1"></i>Lập hóa đơn &amp; Thu tiền</button>
+          </form>
+        <% } %>
+
+        <% if (typeof showPayment !== 'undefined' && showPayment && booking.payment_status === 'unpaid') { %>
+          <hr class="my-2">
+          <form method="post" action="/admin/dat-phong/<%= booking.id %>/thanh-toan?_method=PUT">
+            <select name="payment_method" class="form-select form-select-sm mb-2">
+              <% Object.keys(PAYMENT_STATUS.METHODS).forEach((m) => { %><option value="<%= m %>"><%= PAYMENT_STATUS.METHODS[m] %></option><% }) %>
+            </select>
+            <button class="btn btn-outline-success w-100"><i class="fa-solid fa-money-bill me-1"></i>Đánh dấu đã thanh toán</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

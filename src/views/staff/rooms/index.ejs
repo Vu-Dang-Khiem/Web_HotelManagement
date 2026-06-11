@@ -1,0 +1,56 @@
+<h1 class="page-title mb-3">Sơ đồ phòng</h1>
+
+<div class="row g-2 mb-3">
+  <div class="col-md-4"><div class="card p-3 d-flex flex-row align-items-center gap-3"><div class="room-tile room-available" style="width:50px"><i class="fa-solid fa-check"></i></div><div><div class="h4 mb-0"><%= stats.available %></div><small class="text-muted">Phòng trống</small></div></div></div>
+  <div class="col-md-4"><div class="card p-3 d-flex flex-row align-items-center gap-3"><div class="room-tile room-occupied" style="width:50px"><i class="fa-solid fa-bed"></i></div><div><div class="h4 mb-0"><%= stats.occupied %></div><small class="text-muted">Đang sử dụng</small></div></div></div>
+  <div class="col-md-4"><div class="card p-3 d-flex flex-row align-items-center gap-3"><div class="room-tile room-maintenance" style="width:50px"><i class="fa-solid fa-screwdriver-wrench"></i></div><div><div class="h4 mb-0"><%= stats.maintenance %></div><small class="text-muted">Bảo trì</small></div></div></div>
+</div>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-4">
+      <select name="typeId" class="form-select" onchange="this.form.submit()">
+        <option value="">Tất cả loại phòng</option>
+        <% roomTypes.forEach((t) => { %><option value="<%= t.id %>" <%= String(query.typeId)===String(t.id)?'selected':'' %>><%= t.name %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="status" class="form-select" onchange="this.form.submit()">
+        <option value="">Tất cả trạng thái</option>
+        <% Object.keys(ROOM_STATUS.LABELS).forEach((s) => { %><option value="<%= s %>" <%= query.status===s?'selected':'' %>><%= ROOM_STATUS.LABELS[s] %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-2"><a href="/staff/phong" class="btn btn-outline-secondary w-100">Xóa lọc</a></div>
+  </div>
+</form>
+
+<% floors.forEach((fl) => { const floorRooms = rooms.filter(r => r.floor === fl); if (!floorRooms.length) return; %>
+  <h6 class="text-muted mt-3 mb-2"><i class="fa-solid fa-layer-group me-2"></i>Tầng <%= fl %></h6>
+  <div class="row g-2 mb-2">
+    <% floorRooms.forEach((r) => { %>
+      <div class="col-6 col-md-3 col-lg-2">
+        <div class="room-tile room-<%= r.status %>" data-bs-toggle="modal" data-bs-target="#room<%= r.id %>" style="cursor:pointer">
+          <div class="num"><%= r.room_number %></div>
+          <div class="type"><%= r.type_name %></div>
+          <div class="small mt-1"><%= ROOM_STATUS.LABELS[r.status] %></div>
+        </div>
+      </div>
+      <!-- Modal đổi trạng thái -->
+      <div class="modal fade" id="room<%= r.id %>" tabindex="-1">
+        <div class="modal-dialog modal-sm"><div class="modal-content">
+          <form method="post" action="/staff/phong/<%= r.id %>/trang-thai?_method=PUT">
+            <div class="modal-header"><h5 class="modal-title">Phòng <%= r.room_number %></h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+              <p class="small text-muted mb-2"><%= r.type_name %></p>
+              <label class="form-label">Cập nhật trạng thái</label>
+              <select name="status" class="form-select">
+                <% Object.keys(ROOM_STATUS.LABELS).forEach((s) => { %><option value="<%= s %>" <%= r.status===s?'selected':'' %>><%= ROOM_STATUS.LABELS[s] %></option><% }) %>
+              </select>
+            </div>
+            <div class="modal-footer"><button class="btn btn-navy w-100">Lưu</button></div>
+          </form>
+        </div></div>
+      </div>
+    <% }) %>
+  </div>
+<% }) %>

@@ -1,0 +1,56 @@
+<%- include('../../partials/page-header', { breadcrumb: [{ label: 'Đặt phòng thành công' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="text-center mb-5">
+          <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success text-white mb-3" style="width:90px;height:90px;font-size:2.5rem">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <h2>Đặt phòng thành công!</h2>
+          <p class="text-muted">Cảm ơn bạn đã tin tưởng LuxuryHotel. Chúng tôi sẽ liên hệ xác nhận trong thời gian sớm nhất.</p>
+          <div class="d-inline-block bg-cream rounded px-4 py-2 mt-2">
+            Mã đơn của bạn: <strong class="text-gold fs-5"><%= booking.code %></strong>
+          </div>
+        </div>
+
+        <div class="border rounded-10 p-4">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <h5 class="mb-3">Thông tin phòng</h5>
+              <p class="mb-1"><strong><%= booking.type_name %></strong></p>
+              <p class="text-muted mb-1"><i class="fa-solid fa-calendar me-2 text-gold"></i><%= formatDate(booking.check_in) %> → <%= formatDate(booking.check_out) %> (<%= booking.nights %> đêm)</p>
+              <p class="text-muted mb-0"><i class="fa-solid fa-user-group me-2 text-gold"></i><%= booking.adults %> người lớn, <%= booking.children %> trẻ em</p>
+            </div>
+            <div class="col-md-6">
+              <h5 class="mb-3">Người đặt</h5>
+              <p class="mb-1"><i class="fa-solid fa-user me-2 text-gold"></i><%= booking.guest_name %></p>
+              <p class="text-muted mb-1"><i class="fa-solid fa-phone me-2 text-gold"></i><%= booking.guest_phone %></p>
+              <% if (booking.guest_email) { %><p class="text-muted mb-0"><i class="fa-solid fa-envelope me-2 text-gold"></i><%= booking.guest_email %></p><% } %>
+            </div>
+          </div>
+          <hr>
+          <div class="summary-row"><span class="text-muted">Tiền phòng (<%= booking.nights %> đêm)</span><span><%= formatCurrency(booking.room_total) %></span></div>
+          <% if (booking.services && booking.services.length) { %>
+            <div class="summary-row"><span class="text-muted">Dịch vụ thêm</span><span><%= formatCurrency(booking.services_total) %></span></div>
+          <% } %>
+          <% if (booking.discount > 0) { %>
+            <div class="summary-row text-success"><span>Giảm giá</span><span>- <%= formatCurrency(booking.discount) %></span></div>
+          <% } %>
+          <hr>
+          <div class="summary-row summary-total"><span>Tổng cộng</span><span class="text-gold"><%= formatCurrency(booking.total_amount) %></span></div>
+        </div>
+
+        <div class="text-center mt-4">
+          <% if (currentUser) { %>
+            <a href="/tai-khoan/don-dat" class="btn btn-gold">Xem đơn của tôi</a>
+          <% } else { %>
+            <a href="/register" class="btn btn-gold">Đăng ký để theo dõi đơn</a>
+          <% } %>
+          <a href="/phong" class="btn btn-outline-gold">Tiếp tục đặt phòng</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

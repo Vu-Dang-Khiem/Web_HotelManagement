@@ -1,0 +1,38 @@
+<section class="bg-cream" style="padding:140px 0 80px; min-height:100vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card auth-card">
+          <div class="bg-navy text-white text-center py-4">
+            <div class="footer-brand">LUXURY<span class="text-gold">HOTEL</span></div>
+            <p class="mb-0 text-white-50">Đăng nhập tài khoản</p>
+          </div>
+          <div class="card-body p-4 p-md-5">
+            <form method="post" action="/login">
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                  <input type="email" name="email" class="form-control" required value="<%= formData.email || '' %>" placeholder="email@example.com">
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Mật khẩu</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                  <input type="password" name="password" class="form-control" required placeholder="••••••">
+                </div>
+              </div>
+              <button class="btn btn-gold w-100 btn-lg mb-3">Đăng nhập</button>
+              <p class="text-center mb-0 text-muted">Chưa có tài khoản? <a href="/register" class="text-gold fw-semibold">Đăng ký ngay</a></p>
+            </form>
+            <div class="alert alert-light border mt-4 small mb-0">
+              <strong>Tài khoản demo</strong> (mật khẩu: <code>123456</code>):<br>
+              Admin: <code>admin@hotel.com</code> · Lễ tân: <code>letan@hotel.com</code> · Khách: <code>khach@gmail.com</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

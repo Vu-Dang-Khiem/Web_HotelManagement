@@ -1,0 +1,11 @@
+<section class="section text-center" style="padding-top:160px;">
+  <div class="container">
+    <div class="display-1 font-display text-gold">500</div>
+    <h1 class="mb-3">Lỗi hệ thống</h1>
+    <p class="text-muted mb-4">Đã có lỗi xảy ra. Vui lòng thử lại sau.</p>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <pre class="text-start bg-light p-3 rounded mx-auto" style="max-width:700px; overflow:auto;"><%= error.stack || error.message %></pre>
+    <% } %>
+    <a href="/" class="btn btn-gold"><i class="fa-solid fa-house me-2"></i>Về trang chủ</a>
+  </div>
+</section>

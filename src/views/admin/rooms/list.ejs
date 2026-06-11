@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h1 class="page-title">Phòng</h1>
+  <a href="/admin/phong/them" class="btn btn-navy"><i class="fa-solid fa-plus me-2"></i>Thêm phòng</a>
+</div>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-3"><input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Số phòng..."></div>
+    <div class="col-md-3">
+      <select name="typeId" class="form-select">
+        <option value="">Tất cả loại phòng</option>
+        <% roomTypes.forEach((t) => { %><option value="<%= t.id %>" <%= String(query.typeId)===String(t.id)?'selected':'' %>><%= t.name %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="status" class="form-select">
+        <option value="">Trạng thái</option>
+        <% Object.keys(ROOM_STATUS.LABELS).forEach((s) => { %><option value="<%= s %>" <%= query.status===s?'selected':'' %>><%= ROOM_STATUS.LABELS[s] %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-navy w-100">Lọc</button></div>
+    <div class="col-md-2"><a href="/admin/phong" class="btn btn-outline-secondary w-100">Xóa lọc</a></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Số phòng</th><th>Loại phòng</th><th>Tầng</th><th>Giá/đêm</th><th>Trạng thái</th><th>Ghi chú</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% if (rooms.length === 0) { %>
+          <tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-door-closed"></i><p>Chưa có phòng nào.</p></div></td></tr>
+        <% } %>
+        <% rooms.forEach((r) => { %>
+          <tr>
+            <td><strong class="fs-6"><%= r.room_number %></strong></td>
+            <td><%= r.type_name %></td>
+            <td>Tầng <%= r.floor || '—' %></td>
+            <td class="fw-semibold text-gold"><%= formatCurrency(r.base_price) %></td>
+            <td><span class="badge bg-<%= ROOM_STATUS.BADGES[r.status] %>"><%= ROOM_STATUS.LABELS[r.status] %></span></td>
+            <td class="text-muted small"><%= r.note || '—' %></td>
+            <td class="text-end">
+              <a href="/admin/phong/<%= r.id %>/sua" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+              <form method="post" action="/admin/phong/<%= r.id %>?_method=DELETE" class="d-inline" data-confirm="Xóa phòng này?">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

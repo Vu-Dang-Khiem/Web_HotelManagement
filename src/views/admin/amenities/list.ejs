@@ -1,0 +1,59 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title">Tiện nghi</h1>
+  <button class="btn btn-navy" data-bs-toggle="modal" data-bs-target="#addAmenity"><i class="fa-solid fa-plus me-2"></i>Thêm tiện nghi</button>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Icon</th><th>Tên tiện nghi</th><th>Class icon</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% amenities.forEach((a) => { %>
+          <tr>
+            <td><i class="<%= a.icon %> fs-5 text-gold"></i></td>
+            <td><strong><%= a.name %></strong></td>
+            <td><code class="small"><%= a.icon %></code></td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit<%= a.id %>"><i class="fa-solid fa-pen"></i></button>
+              <form method="post" action="/admin/tien-nghi/<%= a.id %>?_method=DELETE" class="d-inline" data-confirm="Xóa tiện nghi này?">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+          <!-- Modal sửa -->
+          <div class="modal fade" id="edit<%= a.id %>" tabindex="-1">
+            <div class="modal-dialog"><div class="modal-content">
+              <form method="post" action="/admin/tien-nghi/<%= a.id %>?_method=PUT">
+                <div class="modal-header"><h5 class="modal-title">Sửa tiện nghi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                  <label class="form-label">Tên</label>
+                  <input type="text" name="name" class="form-control mb-3" value="<%= a.name %>" required>
+                  <label class="form-label">Class icon (Font Awesome)</label>
+                  <input type="text" name="icon" class="form-control" value="<%= a.icon %>">
+                </div>
+                <div class="modal-footer"><button class="btn btn-navy">Lưu</button></div>
+              </form>
+            </div></div>
+          </div>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal thêm -->
+<div class="modal fade" id="addAmenity" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <form method="post" action="/admin/tien-nghi">
+      <div class="modal-header"><h5 class="modal-title">Thêm tiện nghi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <label class="form-label">Tên *</label>
+        <input type="text" name="name" class="form-control mb-3" required>
+        <label class="form-label">Class icon (Font Awesome)</label>
+        <input type="text" name="icon" class="form-control" placeholder="fa-solid fa-wifi" value="fa-solid fa-check">
+        <small class="text-muted">Tham khảo tại fontawesome.com/icons</small>
+      </div>
+      <div class="modal-footer"><button class="btn btn-navy">Thêm</button></div>
+    </form>
+  </div></div>
+</div>

@@ -1,0 +1,44 @@
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h1 class="page-title">Dịch vụ</h1>
+  <a href="/admin/dich-vu/them" class="btn btn-navy"><i class="fa-solid fa-plus me-2"></i>Thêm dịch vụ</a>
+</div>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-6"><input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Tên dịch vụ..."></div>
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">Tất cả</option>
+        <option value="active" <%= query.status==='active'?'selected':'' %>>Hoạt động</option>
+        <option value="inactive" <%= query.status==='inactive'?'selected':'' %>>Ngừng</option>
+      </select>
+    </div>
+    <div class="col-md-3"><button class="btn btn-navy w-100">Lọc</button></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Dịch vụ</th><th>Giá</th><th>Đơn vị</th><th>Trạng thái</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% if (services.length === 0) { %><tr><td colspan="5"><div class="empty-state"><i class="fa-solid fa-concierge-bell"></i><p>Chưa có dịch vụ.</p></div></td></tr><% } %>
+        <% services.forEach((s) => { %>
+          <tr>
+            <td><i class="<%= s.icon %> text-gold me-2"></i><strong><%= s.name %></strong><div class="small text-muted"><%= s.description||'' %></div></td>
+            <td class="fw-semibold text-gold"><%= formatCurrency(s.price) %></td>
+            <td><%= s.unit %></td>
+            <td><span class="badge bg-<%= s.status==='active'?'success':'secondary' %>"><%= s.status==='active'?'Hoạt động':'Ngừng' %></span></td>
+            <td class="text-end">
+              <a href="/admin/dich-vu/<%= s.id %>/sua" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+              <form method="post" action="/admin/dich-vu/<%= s.id %>?_method=DELETE" class="d-inline" data-confirm="Xóa dịch vụ này?">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

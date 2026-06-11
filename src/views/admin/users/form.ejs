@@ -1,0 +1,29 @@
+<% const isEdit = user !== null; %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title"><%= isEdit ? 'Sửa người dùng' : 'Thêm người dùng' %></h1>
+  <a href="/admin/nguoi-dung" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i>Quay lại</a>
+</div>
+
+<form method="post" action="<%= isEdit ? '/admin/nguoi-dung/' + user.id + '?_method=PUT' : '/admin/nguoi-dung' %>">
+  <div class="card"><div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label">Họ tên *</label><input type="text" name="full_name" class="form-control" required value="<%= isEdit ? user.full_name : (formData.full_name||'') %>"></div>
+      <div class="col-md-6"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" required value="<%= isEdit ? user.email : (formData.email||'') %>" <%= isEdit ? 'readonly' : '' %>></div>
+      <div class="col-md-6"><label class="form-label">Số điện thoại</label><input type="text" name="phone" class="form-control" value="<%= isEdit ? user.phone||'' : '' %>"></div>
+      <div class="col-md-6"><label class="form-label">Vai trò *</label>
+        <select name="role_id" class="form-select" required>
+          <% roles.forEach((r) => { %><option value="<%= r.id %>" <%= isEdit && user.role_id===r.id ? 'selected':'' %>><%= ROLES.LABELS[r.name] %></option><% }) %>
+        </select>
+      </div>
+      <div class="col-md-6"><label class="form-label">Mật khẩu <%= isEdit ? '(để trống nếu không đổi)' : '*' %></label><input type="password" name="password" class="form-control" <%= isEdit ? '' : 'required' %> placeholder="<%= isEdit ? '••••••' : 'Mặc định: 123456' %>"></div>
+      <div class="col-md-6"><label class="form-label">Trạng thái</label>
+        <select name="status" class="form-select">
+          <option value="active" <%= isEdit && user.status==='active'?'selected':'' %>>Hoạt động</option>
+          <option value="locked" <%= isEdit && user.status==='locked'?'selected':'' %>>Bị khóa</option>
+        </select>
+      </div>
+      <div class="col-12"><label class="form-label">Địa chỉ</label><input type="text" name="address" class="form-control" value="<%= isEdit ? user.address||'' : '' %>"></div>
+    </div>
+    <button class="btn btn-navy mt-4"><i class="fa-solid fa-floppy-disk me-2"></i>Lưu</button>
+  </div></div>
+</form>

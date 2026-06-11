@@ -1,0 +1,66 @@
+<%- include('../../partials/page-header', { breadcrumb: [{ label: 'Đơn đặt phòng của tôi' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <!-- Menu tài khoản -->
+      <div class="col-lg-3 mb-4">
+        <div class="list-group">
+          <a href="/tai-khoan" class="list-group-item list-group-item-action"><i class="fa-solid fa-id-card me-2"></i>Hồ sơ</a>
+          <a href="/tai-khoan/don-dat" class="list-group-item list-group-item-action active"><i class="fa-solid fa-suitcase-rolling me-2"></i>Đơn đặt phòng</a>
+          <a href="/logout" class="list-group-item list-group-item-action text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất</a>
+        </div>
+      </div>
+
+      <div class="col-lg-9">
+        <!-- Lọc trạng thái -->
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+          <a href="/tai-khoan/don-dat" class="btn btn-sm <%= !query.status ? 'btn-navy' : 'btn-outline-secondary' %>">Tất cả</a>
+          <% Object.keys(BOOKING_STATUS.LABELS).forEach((st) => { %>
+            <a href="/tai-khoan/don-dat?status=<%= st %>" class="btn btn-sm <%= query.status === st ? 'btn-navy' : 'btn-outline-secondary' %>"><%= BOOKING_STATUS.LABELS[st] %></a>
+          <% }) %>
+        </div>
+
+        <% if (bookings.length === 0) { %>
+          <div class="text-center py-5">
+            <i class="fa-solid fa-suitcase fs-1 text-muted mb-3"></i>
+            <p class="text-muted">Bạn chưa có đơn đặt phòng nào.</p>
+            <a href="/phong" class="btn btn-gold">Đặt phòng ngay</a>
+          </div>
+        <% } %>
+
+        <% bookings.forEach((b) => { %>
+          <div class="border rounded-10 p-3 mb-3">
+            <div class="row align-items-center g-3">
+              <div class="col-md-2">
+                <img src="<%= b.type_thumbnail %>" class="rounded w-100" style="height:80px;object-fit:cover" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200'">
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <strong><%= b.type_name %></strong>
+                  <span class="badge bg-<%= BOOKING_STATUS.BADGES[b.status] %>"><%= BOOKING_STATUS.LABELS[b.status] %></span>
+                </div>
+                <div class="small text-muted">Mã: <%= b.code %></div>
+                <div class="small text-muted"><i class="fa-solid fa-calendar me-1 text-gold"></i><%= formatDate(b.check_in) %> → <%= formatDate(b.check_out) %> · <%= b.nights %> đêm</div>
+              </div>
+              <div class="col-md-2 text-md-end">
+                <div class="text-gold fw-bold"><%= formatCurrency(b.total_amount) %></div>
+                <span class="badge badge-soft"><%= PAYMENT_STATUS.LABELS[b.payment_status] %></span>
+              </div>
+              <div class="col-md-2 text-md-end">
+                <a href="/tai-khoan/don-dat/<%= b.id %>" class="btn btn-sm btn-outline-gold w-100 mb-1">Chi tiết</a>
+                <% if (['pending','confirmed'].includes(b.status)) { %>
+                  <form method="post" action="/tai-khoan/don-dat/<%= b.id %>/huy?_method=PUT" data-confirm="Bạn chắc chắn muốn hủy đơn này?" onsubmit="return confirm('Hủy đơn này?')">
+                    <button class="btn btn-sm btn-outline-danger w-100">Hủy đơn</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+
+        <%- include('../../partials/pagination') %>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,125 @@
+<!-- Thẻ thống kê -->
+<div class="row g-3 mb-4">
+  <div class="col-md-6 col-xl-3">
+    <div class="stat-card bg-grad-1">
+      <i class="fa-solid fa-money-bill-trend-up stat-icon"></i>
+      <div class="stat-value"><%= formatNumber(totalRevenue) %></div>
+      <div class="stat-label">Tổng doanh thu (₫)</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="stat-card bg-grad-2">
+      <i class="fa-solid fa-calendar-check stat-icon"></i>
+      <div class="stat-value"><%= bookingStats.total %></div>
+      <div class="stat-label">Tổng lượt đặt phòng</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="stat-card bg-grad-3">
+      <i class="fa-solid fa-door-open stat-icon"></i>
+      <div class="stat-value"><%= occupancyRate %>%</div>
+      <div class="stat-label">Công suất phòng</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="stat-card bg-grad-4">
+      <i class="fa-solid fa-users stat-icon"></i>
+      <div class="stat-value"><%= totalClients %></div>
+      <div class="stat-label">Khách hàng</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <!-- Biểu đồ doanh thu -->
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fa-solid fa-chart-line text-gold me-2"></i>Doanh thu năm <%= year %></span>
+        <a href="/admin/thong-ke" class="btn btn-sm btn-outline-secondary">Chi tiết</a>
+      </div>
+      <div class="card-body"><canvas id="revenueChart" height="110"></canvas></div>
+    </div>
+  </div>
+  <!-- Trạng thái phòng -->
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header"><i class="fa-solid fa-chart-pie text-gold me-2"></i>Trạng thái phòng</div>
+      <div class="card-body text-center">
+        <canvas id="roomChart" height="180"></canvas>
+        <div class="d-flex justify-content-around mt-3 small">
+          <span><i class="fa-solid fa-circle text-success"></i> Trống: <%= roomStats.available %></span>
+          <span><i class="fa-solid fa-circle text-primary"></i> Bận: <%= roomStats.occupied %></span>
+          <span><i class="fa-solid fa-circle text-secondary"></i> Bảo trì: <%= roomStats.maintenance %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Đơn gần đây -->
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-clock-rotate-left text-gold me-2"></i>Đặt phòng gần đây</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Mã</th><th>Khách</th><th>Loại phòng</th><th>Nhận phòng</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead>
+          <tbody>
+            <% recentBookings.forEach((b) => { %>
+              <tr>
+                <td><a href="/admin/dat-phong/<%= b.id %>" class="fw-semibold text-decoration-none"><%= b.code %></a></td>
+                <td><%= b.guest_name %></td>
+                <td><%= b.type_name %></td>
+                <td><%= formatDate(b.check_in) %></td>
+                <td class="fw-semibold"><%= formatCurrency(b.total_amount) %></td>
+                <td><span class="badge bg-<%= BOOKING_STATUS.BADGES[b.status] %>"><%= BOOKING_STATUS.LABELS[b.status] %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phụ -->
+  <div class="col-lg-4">
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-fire text-gold me-2"></i>Loại phòng bán chạy</div>
+      <ul class="list-group list-group-flush">
+        <% topTypes.forEach((t, i) => { %>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><span class="badge bg-navy me-2"><%= i+1 %></span><%= t.name %></span>
+            <span class="badge badge-soft"><%= t.bookings %> đơn</span>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+    <div class="row g-3">
+      <div class="col-6"><div class="card text-center p-3"><i class="fa-solid fa-star text-gold fs-4"></i><div class="h4 mb-0 mt-2"><%= reviewStats.avg || 0 %></div><small class="text-muted">Điểm TB (<%= reviewStats.total %>)</small></div></div>
+      <div class="col-6"><div class="card text-center p-3"><i class="fa-solid fa-envelope text-gold fs-4"></i><div class="h4 mb-0 mt-2"><%= newContacts %></div><small class="text-muted">Liên hệ mới</small></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const monthly = <%- JSON.stringify(monthlyRevenue) %>;
+  const labels = monthly.map(m => 'Th' + m.month);
+  new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: { labels, datasets: [{
+      label: 'Doanh thu (₫)', data: monthly.map(m => m.revenue),
+      borderColor: '#c8a062', backgroundColor: 'rgba(200,160,98,.12)',
+      fill: true, tension: .35, pointBackgroundColor: '#0f2238'
+    }]},
+    options: { plugins: { legend: { display: false } },
+      scales: { y: { ticks: { callback: v => (v/1e6) + 'tr' } } } }
+  });
+  new Chart(document.getElementById('roomChart'), {
+    type: 'doughnut',
+    data: { labels: ['Trống','Đang dùng','Bảo trì'],
+      datasets: [{ data: [<%= roomStats.available %>, <%= roomStats.occupied %>, <%= roomStats.maintenance %>],
+      backgroundColor: ['#1f9d72','#2a4a6f','#aab4c2'] }] },
+    options: { plugins: { legend: { display: false } } }
+  });
+</script>

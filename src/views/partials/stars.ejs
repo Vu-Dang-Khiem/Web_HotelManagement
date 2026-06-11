@@ -1,0 +1,11 @@
+<%
+  // Hiển thị sao đánh giá. Dùng: include('stars', { rating: 4.5 })
+  const r = Math.round((typeof rating !== 'undefined' ? rating : 0) * 2) / 2;
+%>
+<span class="stars">
+  <% for (let i = 1; i <= 5; i++) { %>
+    <% if (i <= r) { %><i class="fa-solid fa-star"></i>
+    <% } else if (i - 0.5 === r) { %><i class="fa-solid fa-star-half-stroke"></i>
+    <% } else { %><i class="fa-solid fa-star empty"></i><% } %>
+  <% } %>
+</span>

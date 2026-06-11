@@ -1,0 +1,17 @@
+<% if (pagination && pagination.totalPages > 1) { %>
+<nav class="mt-4">
+  <ul class="pagination justify-content-center mb-0">
+    <li class="page-item <%= pagination.hasPrev ? '' : 'disabled' %>">
+      <a class="page-link" href="<%= pagination.prevUrl || '#' %>"><i class="fa-solid fa-angle-left"></i></a>
+    </li>
+    <% pagination.pages.forEach((p) => { %>
+      <li class="page-item <%= p === pagination.currentPage ? 'active' : '' %>">
+        <a class="page-link" href="<%= pagination.url(p) %>"><%= p %></a>
+      </li>
+    <% }) %>
+    <li class="page-item <%= pagination.hasNext ? '' : 'disabled' %>">
+      <a class="page-link" href="<%= pagination.nextUrl || '#' %>"><i class="fa-solid fa-angle-right"></i></a>
+    </li>
+  </ul>
+</nav>
+<% } %>

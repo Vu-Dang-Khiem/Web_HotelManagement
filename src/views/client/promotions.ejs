@@ -1,0 +1,36 @@
+<%- include('../partials/page-header', { breadcrumb: [{ label: 'Khuyến mãi' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Ưu đãi đặc biệt</p>
+      <h2>Chương trình khuyến mãi</h2>
+      <hr class="divider-gold">
+    </div>
+    <% if (promotions.length === 0) { %>
+      <p class="text-center text-muted">Hiện chưa có chương trình khuyến mãi nào.</p>
+    <% } %>
+    <div class="row g-4">
+      <% promotions.forEach((p) => { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="promo-card h-100">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <i class="fa-solid fa-gift fs-1 text-gold"></i>
+              <span class="badge bg-<%= p.discount_type === 'percent' ? 'danger' : 'success' %> fs-6">
+                <% if (p.discount_type === 'percent') { %>-<%= p.discount_value %>%<% } else { %>-<%= formatCurrency(p.discount_value) %><% } %>
+              </span>
+            </div>
+            <h4><%= p.name %></h4>
+            <p class="text-muted"><%= p.description %></p>
+            <% if (p.min_total > 0) { %><p class="small text-muted mb-2"><i class="fa-solid fa-circle-info me-1"></i>Áp dụng cho đơn từ <%= formatCurrency(p.min_total) %></p><% } %>
+            <% if (p.end_date) { %><p class="small text-muted mb-3"><i class="fa-solid fa-clock me-1"></i>HSD: <%= formatDate(p.end_date) %></p><% } %>
+            <div class="d-flex align-items-center gap-2">
+              <span class="promo-code"><%= p.code %></span>
+              <a href="/phong" class="btn btn-sm btn-gold ms-auto">Dùng ngay</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>

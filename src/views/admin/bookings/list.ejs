@@ -1,0 +1,56 @@
+<h1 class="page-title mb-3">Quản lý đặt phòng</h1>
+
+<!-- Chip thống kê -->
+<div class="row g-2 mb-3">
+  <div class="col-6 col-md"><div class="card p-2 text-center"><div class="h5 mb-0"><%= stats.total %></div><small class="text-muted">Tổng</small></div></div>
+  <div class="col-6 col-md"><div class="card p-2 text-center"><div class="h5 mb-0 text-warning"><%= stats.pending %></div><small class="text-muted">Chờ xác nhận</small></div></div>
+  <div class="col-6 col-md"><div class="card p-2 text-center"><div class="h5 mb-0 text-info"><%= stats.confirmed %></div><small class="text-muted">Đã xác nhận</small></div></div>
+  <div class="col-6 col-md"><div class="card p-2 text-center"><div class="h5 mb-0 text-primary"><%= stats.checked_in %></div><small class="text-muted">Đang ở</small></div></div>
+  <div class="col-6 col-md"><div class="card p-2 text-center"><div class="h5 mb-0 text-success"><%= stats.checked_out %></div><small class="text-muted">Đã trả</small></div></div>
+  <div class="col-6 col-md"><div class="card p-2 text-center"><div class="h5 mb-0 text-danger"><%= stats.cancelled %></div><small class="text-muted">Đã hủy</small></div></div>
+</div>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-3"><input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Mã, tên, SĐT..."></div>
+    <div class="col-md-2">
+      <select name="status" class="form-select">
+        <option value="">Trạng thái</option>
+        <% Object.keys(BOOKING_STATUS.LABELS).forEach((s) => { %><option value="<%= s %>" <%= query.status===s?'selected':'' %>><%= BOOKING_STATUS.LABELS[s] %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="paymentStatus" class="form-select">
+        <option value="">Thanh toán</option>
+        <% Object.keys(PAYMENT_STATUS.LABELS).forEach((s) => { %><option value="<%= s %>" <%= query.paymentStatus===s?'selected':'' %>><%= PAYMENT_STATUS.LABELS[s] %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-2"><input type="date" name="fromDate" value="<%= query.fromDate||'' %>" class="form-control"></div>
+    <div class="col-md-2"><button class="btn btn-navy w-100">Lọc</button></div>
+    <div class="col-md-1"><a href="/admin/dat-phong" class="btn btn-outline-secondary w-100"><i class="fa-solid fa-rotate"></i></a></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Mã</th><th>Khách</th><th>Phòng</th><th>Nhận - Trả</th><th>Tổng tiền</th><th>TT</th><th>Thanh toán</th><th class="text-end"></th></tr></thead>
+      <tbody>
+        <% if (bookings.length === 0) { %><tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-calendar-xmark"></i><p>Không có đơn nào.</p></div></td></tr><% } %>
+        <% bookings.forEach((b) => { %>
+          <tr>
+            <td><a href="/admin/dat-phong/<%= b.id %>" class="fw-semibold text-decoration-none"><%= b.code %></a></td>
+            <td><%= b.guest_name %><div class="small text-muted"><%= b.guest_phone %></div></td>
+            <td><%= b.type_name %><% if (b.room_number) { %><div class="small text-muted">Phòng <%= b.room_number %></div><% } %></td>
+            <td class="small"><%= formatDate(b.check_in) %><br><%= formatDate(b.check_out) %></td>
+            <td class="fw-semibold text-gold"><%= formatCurrency(b.total_amount) %></td>
+            <td><span class="badge bg-<%= BOOKING_STATUS.BADGES[b.status] %>"><%= BOOKING_STATUS.LABELS[b.status] %></span></td>
+            <td><span class="badge bg-<%= PAYMENT_STATUS.BADGES[b.payment_status] %>"><%= PAYMENT_STATUS.LABELS[b.payment_status] %></span></td>
+            <td class="text-end"><a href="/admin/dat-phong/<%= b.id %>" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-eye"></i></a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

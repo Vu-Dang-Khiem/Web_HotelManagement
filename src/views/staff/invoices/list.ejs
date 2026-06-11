@@ -1,0 +1,40 @@
+<h1 class="page-title mb-3">Quản lý hóa đơn</h1>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-6"><input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Mã HĐ, mã đơn, tên khách..."></div>
+    <div class="col-md-3">
+      <select name="paymentStatus" class="form-select">
+        <option value="">Tất cả</option>
+        <% Object.keys(PAYMENT_STATUS.LABELS).forEach((s) => { %><option value="<%= s %>" <%= query.paymentStatus===s?'selected':'' %>><%= PAYMENT_STATUS.LABELS[s] %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-md-3"><button class="btn btn-navy w-100">Lọc</button></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Mã HĐ</th><th>Đơn</th><th>Khách</th><th>Ngày lập</th><th>Tổng tiền</th><th>TT</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% if (invoices.length === 0) { %><tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-file-invoice"></i><p>Chưa có hóa đơn.</p></div></td></tr><% } %>
+        <% invoices.forEach((inv) => { %>
+          <tr>
+            <td><strong><%= inv.code %></strong></td>
+            <td><%= inv.booking_code %></td>
+            <td><%= inv.guest_name %></td>
+            <td class="small text-muted"><%= formatDateTime(inv.issued_at) %></td>
+            <td class="fw-semibold text-gold"><%= formatCurrency(inv.total) %></td>
+            <td><span class="badge bg-<%= PAYMENT_STATUS.BADGES[inv.payment_status] %>"><%= PAYMENT_STATUS.LABELS[inv.payment_status] %></span></td>
+            <td class="text-end">
+              <a href="/staff/hoa-don/<%= inv.id %>" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-eye"></i></a>
+              <a href="/staff/hoa-don/<%= inv.id %>/in" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-print"></i></a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

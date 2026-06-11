@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h1 class="page-title">Loại phòng</h1>
+  <a href="/admin/loai-phong/them" class="btn btn-navy"><i class="fa-solid fa-plus me-2"></i>Thêm loại phòng</a>
+</div>
+
+<form class="filter-bar mb-3" method="get">
+  <div class="row g-2">
+    <div class="col-md-5"><input type="text" name="search" value="<%= query.search || '' %>" class="form-control" placeholder="Tìm theo tên..."></div>
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">Tất cả trạng thái</option>
+        <option value="active" <%= query.status==='active'?'selected':'' %>>Đang hoạt động</option>
+        <option value="inactive" <%= query.status==='inactive'?'selected':'' %>>Ngừng</option>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-navy w-100">Lọc</button></div>
+    <div class="col-md-2"><a href="/admin/loai-phong" class="btn btn-outline-secondary w-100">Xóa lọc</a></div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Ảnh</th><th>Tên</th><th>Giá/đêm</th><th>Sức chứa</th><th>Số phòng</th><th>Đánh giá</th><th>Trạng thái</th><th class="text-end">Thao tác</th></tr></thead>
+      <tbody>
+        <% if (roomTypes.length === 0) { %>
+          <tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-bed"></i><p>Chưa có loại phòng nào.</p></div></td></tr>
+        <% } %>
+        <% roomTypes.forEach((rt) => { %>
+          <tr>
+            <td><img src="<%= rt.thumbnail %>" style="width:60px;height:45px;object-fit:cover;border-radius:6px" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=120'"></td>
+            <td><strong><%= rt.name %></strong><div class="small text-muted"><%= rt.area %> m² · <%= rt.bed_type %></div></td>
+            <td class="fw-semibold text-gold"><%= formatCurrency(rt.base_price) %></td>
+            <td><%= rt.capacity %> khách</td>
+            <td><span class="badge badge-soft"><%= rt.available_rooms %>/<%= rt.total_rooms %> trống</span></td>
+            <td><i class="fa-solid fa-star text-warning"></i> <%= rt.avg_rating || '—' %> <span class="text-muted small">(<%= rt.review_count %>)</span></td>
+            <td><span class="badge bg-<%= rt.status==='active'?'success':'secondary' %>"><%= rt.status==='active'?'Hoạt động':'Ngừng' %></span></td>
+            <td class="text-end">
+              <a href="/phong/<%= rt.slug %>" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-eye"></i></a>
+              <a href="/admin/loai-phong/<%= rt.id %>/sua" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+              <form method="post" action="/admin/loai-phong/<%= rt.id %>?_method=DELETE" class="d-inline" data-confirm="Xóa loại phòng này?">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../../partials/pagination') %>

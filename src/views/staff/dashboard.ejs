@@ -1,0 +1,50 @@
+<div class="row g-3 mb-4">
+  <div class="col-md-6 col-xl-3"><div class="stat-card bg-grad-2"><i class="fa-solid fa-hourglass-half stat-icon"></i><div class="stat-value"><%= bookingStats.pending %></div><div class="stat-label">Đơn chờ xác nhận</div></div></div>
+  <div class="col-md-6 col-xl-3"><div class="stat-card bg-grad-1"><i class="fa-solid fa-right-to-bracket stat-icon"></i><div class="stat-value"><%= bookingStats.confirmed %></div><div class="stat-label">Chờ nhận phòng</div></div></div>
+  <div class="col-md-6 col-xl-3"><div class="stat-card bg-grad-3"><i class="fa-solid fa-bed stat-icon"></i><div class="stat-value"><%= bookingStats.checked_in %></div><div class="stat-label">Khách đang ở</div></div></div>
+  <div class="col-md-6 col-xl-3"><div class="stat-card bg-grad-4"><i class="fa-solid fa-door-open stat-icon"></i><div class="stat-value"><%= roomStats.available %>/<%= roomStats.total %></div><div class="stat-label">Phòng trống</div></div></div>
+</div>
+
+<div class="d-flex gap-2 mb-3">
+  <a href="/staff/dat-phong/them" class="btn btn-gold"><i class="fa-solid fa-plus me-2"></i>Đặt phòng tại quầy</a>
+  <a href="/staff/phong" class="btn btn-navy"><i class="fa-solid fa-table-cells me-2"></i>Sơ đồ phòng</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-calendar-day text-gold me-2"></i>Nhận/Trả phòng hôm nay</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Mã</th><th>Khách</th><th>Phòng</th><th>Ngày</th><th>Trạng thái</th><th></th></tr></thead>
+          <tbody>
+            <% if (todayBookings.length === 0) { %><tr><td colspan="6" class="text-center text-muted py-4">Không có lịch hôm nay.</td></tr><% } %>
+            <% todayBookings.forEach((b) => { %>
+              <tr>
+                <td><%= b.code %></td>
+                <td><%= b.guest_name %></td>
+                <td><%= b.room_number || b.type_name %></td>
+                <td class="small"><%= formatDate(b.check_in) %> → <%= formatDate(b.check_out) %></td>
+                <td><span class="badge bg-<%= BOOKING_STATUS.BADGES[b.status] %>"><%= BOOKING_STATUS.LABELS[b.status] %></span></td>
+                <td><a href="/staff/dat-phong/<%= b.id %>" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-eye"></i></a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-clock-rotate-left text-gold me-2"></i>Đơn gần đây</div>
+      <ul class="list-group list-group-flush">
+        <% recentBookings.forEach((b) => { %>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div><strong><%= b.guest_name %></strong><div class="small text-muted"><%= b.type_name %> · <%= b.code %></div></div>
+            <a href="/staff/dat-phong/<%= b.id %>" class="badge bg-<%= BOOKING_STATUS.BADGES[b.status] %> text-decoration-none"><%= BOOKING_STATUS.LABELS[b.status] %></a>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+</div>

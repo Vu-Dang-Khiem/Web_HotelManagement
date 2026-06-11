@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h1 class="page-title">Thống kê &amp; Báo cáo</h1>
+  <form method="get" class="d-flex align-items-center gap-2">
+    <label class="text-muted small mb-0">Năm:</label>
+    <select name="year" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
+      <% years.forEach((y) => { %><option value="<%= y %>" <%= y===year?'selected':'' %>><%= y %></option><% }) %>
+    </select>
+  </form>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4"><div class="stat-card bg-grad-1"><i class="fa-solid fa-sack-dollar stat-icon"></i><div class="stat-value"><%= formatNumber(totalRevenue) %></div><div class="stat-label">Doanh thu năm <%= year %> (₫)</div></div></div>
+  <div class="col-md-4"><div class="stat-card bg-grad-2"><i class="fa-solid fa-calendar-check stat-icon"></i><div class="stat-value"><%= totalBookings %></div><div class="stat-label">Lượt đặt phòng</div></div></div>
+  <div class="col-md-4"><div class="stat-card bg-grad-3"><i class="fa-solid fa-ban stat-icon"></i><div class="stat-value"><%= bookingStats.cancelled %></div><div class="stat-label">Đơn bị hủy</div></div></div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header"><i class="fa-solid fa-chart-column text-gold me-2"></i>Doanh thu theo tháng - <%= year %></div>
+  <div class="card-body"><canvas id="revChart" height="90"></canvas></div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-ranking-star text-gold me-2"></i>Loại phòng bán chạy</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>#</th><th>Loại phòng</th><th>Số đơn</th><th class="text-end">Doanh thu</th></tr></thead>
+          <tbody>
+            <% topTypes.forEach((t, i) => { %>
+              <tr><td><span class="badge bg-navy"><%= i+1 %></span></td><td><%= t.name %></td><td><%= t.bookings %></td><td class="text-end fw-semibold text-gold"><%= formatCurrency(t.revenue) %></td></tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-chart-pie text-gold me-2"></i>Tỷ lệ trạng thái đơn</div>
+      <div class="card-body"><canvas id="statusChart" height="200"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const monthly = <%- JSON.stringify(monthlyRevenue) %>;
+  new Chart(document.getElementById('revChart'), {
+    type: 'bar',
+    data: { labels: monthly.map(m => 'Tháng ' + m.month),
+      datasets: [{ label: 'Doanh thu', data: monthly.map(m => m.revenue), backgroundColor: '#c8a062', borderRadius: 6 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => (v/1e6)+'tr' } } } }
+  });
+  new Chart(document.getElementById('statusChart'), {
+    type: 'pie',
+    data: { labels: ['Chờ','Xác nhận','Đang ở','Đã trả','Hủy'],
+      datasets: [{ data: [<%= bookingStats.pending %>,<%= bookingStats.confirmed %>,<%= bookingStats.checked_in %>,<%= bookingStats.checked_out %>,<%= bookingStats.cancelled %>],
+      backgroundColor: ['#f0ad4e','#5bc0de','#2a4a6f','#1f9d72','#c0506c'] }] }
+  });
+</script>

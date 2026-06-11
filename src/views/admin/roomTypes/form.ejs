@@ -1,0 +1,98 @@
+<% const isEdit = roomType !== null; %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="page-title"><%= isEdit ? 'Sửa loại phòng' : 'Thêm loại phòng' %></h1>
+  <a href="/admin/loai-phong" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i>Quay lại</a>
+</div>
+
+<form method="post" action="<%= isEdit ? '/admin/loai-phong/' + roomType.id + '?_method=PUT' : '/admin/loai-phong' %>" enctype="multipart/form-data">
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card mb-3">
+        <div class="card-header">Thông tin cơ bản</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Tên loại phòng *</label>
+            <input type="text" name="name" class="form-control" required value="<%= isEdit ? roomType.name : (formData.name||'') %>">
+          </div>
+          <div class="row g-3">
+            <div class="col-md-4"><label class="form-label">Giá/đêm (₫) *</label><input type="number" name="base_price" class="form-control" required value="<%= isEdit ? roomType.base_price : '' %>"></div>
+            <div class="col-md-4"><label class="form-label">Sức chứa *</label><input type="number" name="capacity" class="form-control" required value="<%= isEdit ? roomType.capacity : 2 %>"></div>
+            <div class="col-md-4"><label class="form-label">Diện tích (m²)</label><input type="number" name="area" class="form-control" value="<%= isEdit ? roomType.area : '' %>"></div>
+            <div class="col-md-6"><label class="form-label">Loại giường</label><input type="text" name="bed_type" class="form-control" value="<%= isEdit ? roomType.bed_type||'' : '' %>" placeholder="VD: 1 giường King"></div>
+            <div class="col-md-6"><label class="form-label">Hướng nhìn</label><input type="text" name="view_type" class="form-control" value="<%= isEdit ? roomType.view_type||'' : '' %>" placeholder="VD: Hướng biển"></div>
+          </div>
+          <div class="mt-3">
+            <label class="form-label">Mô tả</label>
+            <textarea name="description" class="form-control" rows="4"><%= isEdit ? roomType.description||'' : '' %></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Tiện nghi</div>
+        <div class="card-body">
+          <div class="row g-2">
+            <% amenities.forEach((a) => { %>
+              <div class="col-md-4">
+                <label class="d-flex align-items-center gap-2 border rounded p-2">
+                  <input type="checkbox" name="amenities" value="<%= a.id %>" <%= selectedAmenities.map(String).includes(String(a.id)) ? 'checked' : '' %>>
+                  <i class="<%= a.icon %> text-gold"></i><%= a.name %>
+                </label>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card mb-3">
+        <div class="card-header">Ảnh &amp; trạng thái</div>
+        <div class="card-body">
+          <% if (isEdit && roomType.thumbnail) { %>
+            <img src="<%= roomType.thumbnail %>" class="img-fluid rounded mb-2" style="height:120px;width:100%;object-fit:cover">
+          <% } %>
+          <label class="form-label">Ảnh đại diện (URL)</label>
+          <input type="text" name="thumbnail" class="form-control mb-2" value="<%= isEdit ? roomType.thumbnail||'' : '' %>" placeholder="https://...">
+          <label class="form-label">Hoặc tải lên</label>
+          <input type="file" name="thumbnailFile" class="form-control mb-3" accept="image/*">
+          <label class="form-label">Trạng thái</label>
+          <select name="status" class="form-select">
+            <option value="active" <%= isEdit && roomType.status==='active' ? 'selected':'' %>>Hoạt động</option>
+            <option value="inactive" <%= isEdit && roomType.status==='inactive' ? 'selected':'' %>>Ngừng</option>
+          </select>
+        </div>
+      </div>
+
+      <% if (!isEdit) { %>
+        <div class="card">
+          <div class="card-header">Thư viện ảnh</div>
+          <div class="card-body">
+            <label class="form-label small text-muted">Mỗi dòng 1 đường dẫn ảnh</label>
+            <textarea name="gallery" class="form-control" rows="4" placeholder="https://...&#10;https://..."></textarea>
+          </div>
+        </div>
+      <% } else if (roomType.images && roomType.images.length) { %>
+        <div class="card">
+          <div class="card-header">Thư viện ảnh</div>
+          <div class="card-body">
+            <div class="row g-2">
+              <% roomType.images.forEach((img) => { %>
+                <div class="col-6 position-relative">
+                  <img src="<%= img.image_url %>" class="img-fluid rounded" style="height:70px;width:100%;object-fit:cover">
+                  <form method="post" action="/admin/loai-phong/<%= roomType.id %>/anh/<%= img.id %>?_method=DELETE" class="position-absolute top-0 end-0">
+                    <button class="btn btn-sm btn-danger py-0 px-1"><i class="fa-solid fa-xmark"></i></button>
+                  </form>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <button class="btn btn-navy btn-lg"><i class="fa-solid fa-floppy-disk me-2"></i>Lưu</button>
+  </div>
+</form>
